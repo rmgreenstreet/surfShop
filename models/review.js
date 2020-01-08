@@ -19,4 +19,4 @@ const reviewSchema = new Schema({
         }
 });
 
-module.exports = mongoose.model('Review',UserSchema);
+module.exports = mongoose.model('Review',reviewSchema);

@@ -1,23 +1,38 @@
+require('dotenv').config({ path: '.env' });
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const serveFavicon = require('serve-favicon');
 const passport = require('passport');
 const expressSession = require('express-session');
+const User = require('./models/user');
 const methodOverride = require('method-override');
 const expressSanitizer = require('express-sanitizer');
 const flash = require('connect-flash');
 const async = require('async');
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
-const postsRouter = require('./routes/posts');
-const reviewsRouter = require('./routes/reviews');
+
+
 
 const app = express();
+
+//connect to database
+mongoose.connect(process.env.DATABASE_URL,{
+	useNewUrlParser:true, 
+	useUnifiedTopology:true,
+  useFindAndModify: false,
+  useCreateIndex:true
+}).then(() => {
+	console.log('Connected to Mongoose DB')
+}).catch(err => {
+	console.log('error: ',err.message)
+});
+
+console.log("Environment database URL: "+process.env.DATABASE_URL);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,7 +49,7 @@ app.use(expressSanitizer());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(expressSession({
-		secret:"dogs are so good",
+		secret:"surfs up brah",
 		resave:false,
 		saveUninitialized:false
 		}));
@@ -43,10 +58,26 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+//configure passport and sessions
+
+// CHANGE: USE "createStrategy" INSTEAD OF "authenticate"
+passport.use(User.createStrategy());
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+//mount routes
+const indexRouter = require('./routes/index');
+const usersRouter = require('./routes/users');
+const postsRouter = require('./routes/posts');
+const reviewsRouter = require('./routes/reviews');
+
+
 app.use('/', indexRouter);
 app.use('/profile', usersRouter);
 app.use('/posts', postsRouter);
 app.use('/posts/:id/reviews', reviewsRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

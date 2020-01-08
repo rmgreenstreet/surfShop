@@ -13,11 +13,18 @@ const userSchema = new Schema({
         ref:'Post'}
     ],
     reviews:[
-        {type:Schema.Types.ObjectId,
-        ref:'Review'}],
+        {
+            type:Schema.Types.ObjectId,
+            ref:'Review'
+        }
+    ],
+    isAdmin:{
+        type:Boolean,
+        default:false
+    }
 });
 
 userSchema.plugin(passportLocalMongoose);
 
-module.exports = mongoose.model('User',UserSchema);
+module.exports = mongoose.model('User',userSchema);
 

@@ -25,4 +25,4 @@ const postSchema = new Schema({
       averageReview:Number
 });
 
-module.exports = mongoose.model('Post',UserSchema);
+module.exports = mongoose.model('Post',postSchema);

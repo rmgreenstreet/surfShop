@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { postRegister } = require('../controllers');
+const { errorHandler } = require('../middleware');
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -13,10 +15,7 @@ router.get('/register', (req, res, next) => {
 });
 
 /* POST create user page  */
-router.post('/register', (req, res, next) => {
-  res.send('POST /register');
-  // res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+router.post('/register',errorHandler(postRegister));
 
 /* GET login page  */
 router.get('/login', (req, res, next) => {
@@ -48,13 +47,13 @@ router.put('/forgot', (req, res, next) => {
   // res.render('index', { title: 'SurfShop - Home', page:'home' });
 });
 
-/* GET forgot password page  */
+/* GET reset password page  */
 router.get('/reset/:token', (req, res, next) => {
   res.send('GET /reset/:token');
   // res.render('index', { title: 'SurfShop - Home', page:'home' });
 });
 
-/* PUT forgot password page  */
+/* PUT reset password page  */
 router.put('/reset/:token', (req, res, next) => {
   res.send('PUT /reset/:token');
   // res.render('index', { title: 'SurfShop - Home', page:'home' });
