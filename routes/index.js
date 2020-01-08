@@ -27,13 +27,13 @@ router.get('/login', (req, res, next) => {
 router.post('/login', errorHandler(postLogin));
   
 
-/* GET logout page  */
+/* GET logout  */
 router.get('/logout', errorHandler(getLogout));
 
 /* GET forgot password page  */
 router.get('/forgot', (req, res, next) => {
   res.send('GET /forgot');
-  // res.render('index', { title: 'SurfShop - Home', page:'home' });
+  // res.render('forgot', { title: 'SurfShop - Forgot Password', page:'forgot' });
 });
 
 /* PUT forgot password page  */

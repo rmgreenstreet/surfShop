@@ -2,8 +2,8 @@ const User = require('../models/user');
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const passport = require('passport');
-// const async = require('async');
 
+//configure where/how files are stored in cloudinary
 let storage = multer.diskStorage({
     filename: function(req,file,callback) {
         callback(null,Date.now() + file.originalname);
@@ -11,6 +11,7 @@ let storage = multer.diskStorage({
     folder:'surf_shop/users'
 });
 
+//only accept image files for cloudinary
 let imageFilter = function (req,file,cb) {
     //accept image files only
     if (!file.originalname.match(/\.jpg|jpeg|png|gif)$/i)) {
@@ -21,8 +22,10 @@ let imageFilter = function (req,file,cb) {
     }
 };
 
+//configure multer as upload parameters for cloudinary
 let upload = multer({storage:storage, filefilter:imageFilter});
 
+//configure cloudinary upload settings
 cloudinary.config({
     cloud_name:process.env.CLOUDINARY_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
