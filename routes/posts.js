@@ -1,23 +1,42 @@
 const express = require('express');
 const router = express.Router({mergeParams:true});
+const multer=require('multer');
+const { errorHandler } = require('../middleware');
+const { 
+    getPosts, 
+    newPost, 
+    createPost 
+} = require('../controllers/posts');
+
+//configure where/how files are stored in cloudinary
+let storage = multer.diskStorage({
+    filename: function(req,file,callback) {
+        callback(null,Date.now() + file.originalname);
+    }
+});
+
+//only accept image files for cloudinary
+let imageFilter = (req,file,cb) => {
+    //accept image files only
+    if (!file.originalname.match(/\.jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files (jpg, jpeg, png, gif) are allowed!'), false);
+    }
+    else {
+        cb(null,true);
+    }
+};
+
+//configure multer as upload parameters for cloudinary
+let upload = multer({storage:storage, filefilter:imageFilter}).array('image',10);
 
 /* GET posts index page /posts */
-router.get('/', (req, res, next) => {
-    res.send('/posts');
-//   res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+router.get('/',errorHandler(getPosts));
 
-/* GET create index page  */
-router.get('/new', (req, res, next) => {
-    res.send('/new');
-    // res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+/* GET create post page  */
+router.get('/new', errorHandler(newPost));
 
 /* POST new post  */
-router.post('/', (req, res, next) => {
-    res.send('CREATE /posts');
-    // res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+router.post('/', upload ,errorHandler(createPost));
 
 /* GET show page  */
 router.get('/:id', (req, res, next) => {

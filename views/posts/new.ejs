@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Create New Post</h1>
+        <form action="/posts" method="post" enctype="multipart/form-data">
+            <input type="text" name="post[title]" placeholder="Post Title">
+            <input type="number" step=".01" name="post[price]" placeholder="Post Price">
+            <textarea name="post[description]" placeholder="Post Description"></textarea>
+            <input type="text" name="post[location]" placeholder="Post Location">
+            <input type="file" name="image" multiple="multiple">
+            <p>Select up to 10 images (jpg,jpeg,png,gif)</p>
+            <button type="submit">
+                Submit
+            </button>
+        </form>
+    </body>
+</html>

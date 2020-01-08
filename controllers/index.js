@@ -2,6 +2,7 @@ const User = require('../models/user');
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
 const passport = require('passport');
+// const { storage, imageFilter, upload } = require('configVars.js');
 
 //configure where/how files are stored in cloudinary
 let storage = multer.diskStorage({
@@ -32,12 +33,23 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+function userImageUpload(file) {
+    cloudinary.uploader.upload(file, (err,result) => {
+        if(err) {
+            console.log(err.message);
+        }
+        else {
+            return result;
+        }
+    });
+}
+
 module.exports = {
     // POST to 'Register' page to create new user
     async postRegister (req,res,next) {
         console.log('registering user');
         //send uploaded image to cloudinary
-            await cloudinary.uploader.upload(req.file.path);
+            let result = userImageUpload(req.file.path);
             //set adminStatus to false to initialize
             let adminStatus = false;
                 if(req.body.adminCode === process.env.ADMINCODE) {
