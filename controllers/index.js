@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const cloudinary = require('cloudinary').v2;
 const multer = require('multer');
+const passport = require('passport');
 // const async = require('async');
 
 let storage = multer.diskStorage({
@@ -52,5 +53,16 @@ module.exports = {
                 }
                 res.redirect('/profile/'+user._id);
             });
+    },
+
+    async postLogin (req,res,next) {
+        await passport.authenticate('local',{ 
+            successRedirect: '/',
+            failureRedirect: '/login' 
+          })(req,res,next);
+    },
+    async getLogout (req,res,next) {
+        await req.logout();
+            res.redirect('/');
     }
 };
