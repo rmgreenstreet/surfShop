@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router({mergeParams:true});
 const multer=require('multer');
-const { errorHandler } = require('../middleware');
+const { asyncErrorHandler } = require('../middleware');
 const { 
-    getPosts, 
-    newPost, 
-    createPost 
+    postIndex, 
+    postNew, 
+    postCreate,
+    postShow,
+    postEdit,
+    postUpdate,
+    postDestroy
 } = require('../controllers/posts');
 
 //configure where/how files are stored in cloudinary
@@ -30,36 +34,24 @@ let imageFilter = (req,file,cb) => {
 let upload = multer({storage:storage, filefilter:imageFilter}).array('image',10);
 
 /* GET posts index page /posts */
-router.get('/',errorHandler(getPosts));
+router.get('/',asyncErrorHandler(postIndex));
 
 /* GET create post page  */
-router.get('/new', errorHandler(newPost));
+router.get('/new', postNew);
 
 /* POST new post  */
-router.post('/', upload ,errorHandler(createPost));
+router.post('/', upload ,asyncErrorHandler(postCreate));
 
 /* GET show page  */
-router.get('/:id', (req, res, next) => {
-    res.send('SHOW /:id');
-    // res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+router.get('/:id', asyncErrorHandler(postShow));
 
 /* GET posts edit page  */
-router.get('/:id/edit', (req, res, next) => {
-    res.send('EDIT /:id/edit');
-    // res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+router.get('/:id/edit', asyncErrorHandler(postEdit));
 
-/* PUT posts update page  */
-router.put('/:id', (req, res, next) => {
-    res.send('UPDATE /:id');
-    // res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+/* PUT posts update  */
+router.put('/:id', asyncErrorHandler(postUpdate));
 
 /* POST delete post  */
-router.post('/:id/', (req, res, next) => {
-    res.send('DELETE /:id/');
-    // res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+router.post('/:id/', asyncErrorHandler(postDestroy));
 
 module.exports = router;
