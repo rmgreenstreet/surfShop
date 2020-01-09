@@ -1,3 +1,4 @@
+require('dotenv').config({ path: '.env' });
 const express = require('express');
 const router = express.Router({mergeParams:true});
 const multer = require('multer');

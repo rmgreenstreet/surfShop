@@ -9,10 +9,10 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-async function imageUpload(req,documentType,publicId) {
+async function imageUpload(req,documentType) {
     imageArray=[];
     for(const file of req.files) {
-        let image = await cloudinary.uploader.upload(file.path, {folder:'surf_shop/'+documentType,public_id:publicId});
+        let image = await cloudinary.uploader.upload(file.path, {folder:'surf_shop/'+process.env.CLOUDINARY_DEV+documentType});
         imageArray.push({
             url:image.secure_url,
             publicId:image.public_id
