@@ -5,19 +5,12 @@ const Schema = mongoose.Schema;
 const userSchema = new Schema({
     email:String,
     image: {
-        url: String,
+        url: {
+            type:String,
+            default:'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png'
+        },
         publicId: String
     },
-    posts:[
-        {type:Schema.Types.ObjectId,
-        ref:'Post'}
-    ],
-    reviews:[
-        {
-            type:Schema.Types.ObjectId,
-            ref:'Review'
-        }
-    ],
     isAdmin:{
         type:Boolean,
         default:false

@@ -7,8 +7,11 @@ const postSchema = new Schema({
   description:String,
   images: [
     {
-      url: String,
-      publicId: String
+      url: {
+        type:String,
+        default:'https://res.cloudinary.com/rgreenstreet/image/upload/v1578603203/surf_shop/post/149933_txhwtj.png'
+      },
+      publicId: String,
     }
   ],
   location:String,

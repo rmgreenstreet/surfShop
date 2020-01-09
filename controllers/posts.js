@@ -1,6 +1,5 @@
 const Post = require('../models/post');
 const cloudinary = require('cloudinary').v2;
-require('locus');
 
 
 //configure cloudinary upload settings
@@ -10,16 +9,24 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// async imageUpload(file,documentType) {
-//     await cloudinary.uploader.upload(file, {folder:'surf_shop/'+documentType}, (err,result) => {
-//         if(err) {
-//             return console.log(err.message);
-//         }
-//         else {
-//             return result;
-//         }
-//     });
-// }
+async function imageUpload(req,documentType,publicId) {
+    imageArray=[];
+    for(const file of req.files) {
+        let image = await cloudinary.uploader.upload(file.path, {folder:'surf_shop/'+documentType,public_id:publicId});
+        imageArray.push({
+            url:image.secure_url,
+            publicId:image.public_id
+        });
+    }
+    return imageArray;
+}
+
+async function imageDelete(postId) {
+    let post = await Post.findById(postId);
+    return await post.images.forEach(image => {
+        cloudinary.uploader.destroy(image.publicId);
+    });
+}
 
 module.exports = {
     //posts index
@@ -34,18 +41,11 @@ module.exports = {
     },
     //create new post
     async postCreate(req, res, next) {
+        req.body.post.images = await imageUpload(req,'post');
 		let post = await Post.create(req.body.post);
+        req.flash('success','Post Created!');
 		res.redirect(`/posts/${post.id}`);
 	},
-    // async createPost(req,res,next) {
-    //     let newPost = new Post(req.body.post);
-    //     req.files.forEach(item => {
-    //         let postImage = new imageUpload(item.path,'post');
-    //         newPost.images.push({url:postImage.secure_url,publicId:postImage.public_id});
-    //     }); 
-    //     newPost.save() 
-    //     res.redirect('posts/'+newPost._id);
-    // },
     //show single post
     async postShow (req,res,next) {
         post = await Post.findById(req.params.id);
@@ -58,11 +58,15 @@ module.exports = {
     },
     //put edit post
     async postUpdate (req,res,next) {
+        console.log(req.files)
+        await imageDelete(req.params.id);
+        req.body.post.images = await imageUpload(req,'post');
         let post = await Post.findByIdAndUpdate(req.params.id,req.body.post);
         req.flash('success','Post Updated!');
         res.redirect('/posts/'+post.id);
     },
     async postDestroy (req,res,next) {
+        await imageDelete(req.params.id);
         await Post.findByIdAndRemove(req.params.id);
         req.flash('success','Post Deleted!');
         res.redirect('/posts/');
