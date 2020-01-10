@@ -60,9 +60,9 @@ module.exports = {
             const newUser = new User({
                 username:req.body.username,
                 email:req.body.email,
-                //set User's image url and publicId to those returned from Cloudinary
+                //set User's image url and public_id to those returned from Cloudinary
                 'image.url':result.url,
-                'image.publicId':result.public_id,
+                'image.public_id':result.public_id,
                 isAdmin:adminStatus});
                 // register new User using these properties
             await User.register(newUser,req.body.password);

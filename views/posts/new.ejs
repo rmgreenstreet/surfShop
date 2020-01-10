@@ -3,11 +3,26 @@
     <body>
         <h1>Create New Post</h1>
         <form action="/posts" method="post" enctype="multipart/form-data">
-            <input type="text" name="post[title]" placeholder="Post Title">
-            <input type="number" step=".01" name="post[price]" placeholder="Post Price">
-            <textarea name="post[description]" placeholder="Post Description"></textarea>
-            <input type="text" name="post[location]" placeholder="Post Location">
-            <input type="file" name="image" multiple="multiple" accept="images/*">
+            <div class="form-group">
+                <label for="post[title]">Title</label>
+                <input type="text" name="post[title]" placeholder="Post Title">
+            </div>
+            <div class="form-group">
+                <label for="post[price]">Price</label>
+                <input type="number" step=".01" name="post[price]" placeholder="Post Price">
+            </div>
+            <div class="form-group">
+                <label for="post[description">Description</label>
+                <textarea name="post[description]" placeholder="Post Description"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="post[location">Location</label>
+                <input type="text" name="post[location]" placeholder="Post Location">
+            </div>
+            <div class="form-group">
+                <label for="image">Images</label>
+                <input type="file" name="image" multiple="multiple" accept="images/*">
+            </div>
             <p>Select up to 4 images (jpg,jpeg,png,gif)</p>
             <button type="submit">
                 Submit

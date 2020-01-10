@@ -56,6 +56,12 @@ app.use(expressSession({
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(passport.session());
 app.use(flash());
+app.use(function(req, res, next){
+	res.locals.currentUser = req.user;
+	res.locals.error = req.flash("error");
+	res.locals.success = req.flash("success");
+	next();
+});
 
 //configure passport and sessions
 

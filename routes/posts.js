@@ -6,10 +6,7 @@ const multer = require('multer');
 const storage = multer.diskStorage({
     filename: function(req,file,callback) {
         callback(null,Date.now() + file.originalname);
-    },
-    destination: function (req, file, cb) {
-        cb(null, 'uploads')
-      }
+    }
 });
 //only accept image files for cloudinary
 const imageFilter = (req,file,cb) => {
