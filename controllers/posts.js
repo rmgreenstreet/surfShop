@@ -1,6 +1,7 @@
 
 const Post = require('../models/post');
 const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
 
 
 //configure cloudinary upload settings
@@ -10,23 +11,17 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-async function imageUpload(files,documentType) {
-    imageArray=[];
-    for(const file of files) {
-        let image = await cloudinary.uploader.upload(file.path, {folder:'surf_shop/dev'+documentType});
-        imageArray.push({
-            url:image.secure_url,
-            public_id:image.public_id
-        });
-    }
-    return imageArray;
+async function imageUpload(file,documentType) {
+    uploadedImage={};
+    let image = await cloudinary.uploader.upload(file.path, {folder:'surf_shop/dev/'+documentType});
+    uploadedImage.url=image.secure_url;
+    uploadedImage.public_id=image.public_id;
+    await fs.unlink(file.path,(err)=>{});
+    return uploadedImage;
 }
 
-async function imageDelete(postId) {
-    let post = await Post.findById(postId);
-    return await post.images.forEach(image => {
-        cloudinary.uploader.destroy(image.public_id);
-    });
+async function imageDelete(public_id) {
+    await cloudinary.uploader.destroy(public_id);
 }
 
 module.exports = {
@@ -42,7 +37,10 @@ module.exports = {
     },
     //create new post
     async postCreate(req, res, next) {
-        req.body.post.images = await imageUpload(req.files,'post');
+        req.body.post.images=[];
+        for (const file of req.files) {
+            req.body.post.images.push(await imageUpload(file,'post'));
+        }
 		let post = await Post.create(req.body.post);
         req.flash('success','Post Created!');
 		res.redirect(`/posts/${post.id}`);
@@ -68,11 +66,11 @@ module.exports = {
 			// loop over deleteImages
 			for(const public_id of deleteImages) {
 				// delete images from cloudinary
-				await cloudinary.uploader.destroy(public_id);
-				// delete image from post.images
+                imageDelete(public_id);
+				// // delete image from post.images
 				for(const image of post.images) {
 					if(image.public_id === public_id) {
-						let index = post.images.indexOf(image);
+                        let index = post.images.indexOf(image);
 						post.images.splice(index, 1);
 					}
 				}
@@ -80,14 +78,12 @@ module.exports = {
 		}
 		// check if there are any new images for upload
 		if(req.files) {
+            // post.images.push(await imageUpload(req.files));
 			// upload images
 			for(const file of req.files) {
-				let image = await cloudinary.uploader.upload(file.path);
+				let image = await imageUpload(file,'post');
 				// add images to post.images array
-				post.images.push({
-					url: image.secure_url,
-					public_id: image.public_id
-				});
+				post.images.push(image);
 			}
 		}
 		// update the post with any new properties
@@ -97,12 +93,16 @@ module.exports = {
 		post.location = req.body.post.location;
 		// save the updated post into the db
 		post.save();
-		// redirect to show page
+        // redirect to show page
+        req.flash('success','Post Updated!');
 		res.redirect(`/posts/${post.id}`);
 	},
     async postDestroy (req,res,next) {
-        await imageDelete(req.params.id);
-        await Post.findByIdAndRemove(req.params.id);
+        let post = await Post.findById(req.params.id);
+        for (const image of post.images) {
+            await imageDelete(image.public_id);
+        }
+        await post.remove();
         req.flash('success','Post Deleted!');
         res.redirect('/posts/');
     }
