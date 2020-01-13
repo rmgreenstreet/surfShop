@@ -2,6 +2,7 @@
 const Post = require('../models/post');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
+const NodeGeocoder = require('node-geocoder');
 
 
 //configure cloudinary upload settings
@@ -10,6 +11,15 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+var mapsOptions = {
+    provider: 'google',
+    httpAdapter: 'https',
+    apiKey: process.env.GEOCODING_KEY,
+    formatter: null
+  };
+   
+  var geocoder = NodeGeocoder(mapsOptions);
 
 async function imageUpload(file,documentType) {
     uploadedImage={};
@@ -22,6 +32,16 @@ async function imageUpload(file,documentType) {
 
 async function imageDelete(public_id) {
     await cloudinary.uploader.destroy(public_id);
+}
+
+async function getGeoCode(location) {
+    locationObj = {};
+    await geocoder.geocode(location, (err, data) => {
+		locationObj.lat = data[0].latitude;
+		locationObj.lng = data[0].longitude;
+        locationObj.formattedAddress = data[0].formattedAddress;
+    });
+    return locationObj;
 }
 
 module.exports = {
@@ -41,7 +61,12 @@ module.exports = {
         for (const file of req.files) {
             req.body.post.images.push(await imageUpload(file,'post'));
         }
-		let post = await Post.create(req.body.post);
+        let post = await Post.create(req.body.post);
+        let locationObj = await(getGeoCode(req.body.post.location));
+        post.location.formattedAddress = locationObj.formattedAddress;
+        post.location.lat = locationObj.lat;
+        post.location.lng = locationObj.lng;
+        post.save();
         req.flash('success','Post Created!');
 		res.redirect(`/posts/${post.id}`);
 	},
@@ -90,7 +115,7 @@ module.exports = {
 		post.title = req.body.post.title;
 		post.description = req.body.post.description;
 		post.price = req.body.post.price;
-		post.location = req.body.post.location;
+		post.location = await(getGeoCode(req.body.post.location));
 		// save the updated post into the db
 		post.save();
         // redirect to show page

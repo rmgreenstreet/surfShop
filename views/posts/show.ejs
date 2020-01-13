@@ -1,24 +1,56 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        <h1><%= post.title %></h1>
-        <% post.images.forEach(image => { %>
-            <img src="<%= image.url %>" width="100px" style="margin-bottom:20px;">
-        <% }); %>
-        
-        <p>Price: <%= post.price %></p>
-        <p>Description: <%= post.description %></p>
-        <p>Location: <%= post.location %></p>
-        <p><a href="/posts/<%= post._id %>/edit">
-            <button>Edit</button>
-        </a></p>
-        <p><form action="/posts/<%= post.id %>?_method=DELETE" method="post">
-            <button type="submit">Delete</button>
-        </form></p>
-        <p>
-            <a href="/posts">
-            <button>Back</button>
-            </a>
-        </p>
-    </body>
-</html>
+<%- include("../partials/header") %>
+    <div class ='container'>
+
+            <h1><%= post.title %></h1>
+            <% post.images.forEach(image => { %>
+                <img src="<%= image.url %>" width="100px" style="margin-bottom:20px;">
+            <% }); %>
+            
+            <p>Price: <%= post.price %></p>
+            <p>Description: <%= post.description %></p>
+            <p>Location: <%= post.location.formattedAddress %></p>
+            <div CLASS="card mt-2">
+                <div id="map"></div>
+            </div>
+            <p><a href="/posts/<%= post._id %>/edit">
+                <button>Edit</button>
+            </a></p>
+            <p><form action="/posts/<%= post.id %>?_method=DELETE" method="post">
+                <button type="submit">Delete</button>
+            </form></p>
+            <p>
+                <a href="/posts">
+                <button>Back</button>
+                </a>
+            </p>
+        </div>
+        <script>
+            function initMap() {
+            var lat = <%= post.location.lat %>;
+            var lng = <%= post.location.lng %>;
+            var center = {lat: lat, lng: lng };
+            var map = new 	google.maps.Map(document.getElementById('map'), {
+                zoom: 10,
+                center: center,
+                scrollwheel: false
+            });
+            var contentString = `
+                <strong><%= post.title %><br />
+                <%= post.location.formattedAddress %></strong>
+            `
+            
+            var infowindow = new google.maps.InfoWindow({
+                content: contentString
+            });
+            var marker = new google.maps.Marker({
+                position: center,
+                map: map
+            });
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
+            }
+        </script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLEMAPS_KEY %>&callback=initMap"></script>
+    
+<%- include('../partials/footer'); %>

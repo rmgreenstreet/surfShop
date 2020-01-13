@@ -14,9 +14,11 @@ const postSchema = new Schema({
       public_id: String,
     }
   ],
-  location:String,
-  lat:Number,
-  lng:Number,
+  location: {
+    formattedAddress:String,
+    lat:Number,
+    lng:Number
+  },
   author:
     {
       type:Schema.Types.ObjectId,
