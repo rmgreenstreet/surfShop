@@ -9,7 +9,7 @@
                 <img src="<%= post.images[0].url %>" width="100px">
                 <p>Price: <%= post.price %></p>
                 <p>Description: <%= post.description %></p>
-                <p>Location: <%= post.location %></p>
+                <p>Location: <%= post.location.formattedAddress %></p>
                 <p><a href="/posts/<%= post._id %>">More Info</a></p>
             </div>
         <% }); %>

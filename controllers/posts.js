@@ -34,7 +34,7 @@ async function imageDelete(public_id) {
     await cloudinary.uploader.destroy(public_id);
 }
 
-async function getGeoCode(location) {
+async function getCoordinates(location) {
     locationObj = {};
     await geocoder.geocode(location, (err, data) => {
 		locationObj.lat = data[0].latitude;
@@ -62,7 +62,7 @@ module.exports = {
             req.body.post.images.push(await imageUpload(file,'post'));
         }
         let post = await Post.create(req.body.post);
-        let locationObj = await(getGeoCode(req.body.post.location));
+        let locationObj = await(getCoordinates(req.body.post.location));
         post.location.formattedAddress = locationObj.formattedAddress;
         post.location.lat = locationObj.lat;
         post.location.lng = locationObj.lng;
@@ -84,7 +84,7 @@ module.exports = {
 	async postUpdate(req, res, next) {
 		// find the post by id
 		let post = await Post.findById(req.params.id);
-		// check if there's any images for deletion
+		// check if there are any images for deletion
 		if(req.body.deleteImages && req.body.deleteImages.length) {			
 			// assign deleteImages from req.body to its own variable
 			let deleteImages = req.body.deleteImages;
@@ -114,8 +114,13 @@ module.exports = {
 		// update the post with any new properties
 		post.title = req.body.post.title;
 		post.description = req.body.post.description;
-		post.price = req.body.post.price;
-		post.location = await(getGeoCode(req.body.post.location));
+        post.price = req.body.post.price;
+        // check if location was updated
+        if (post.location.formattedAddress !== req.body.post.location) {
+            console.log('location has changed')
+            //if so, get new corrdinates and apply to post
+            post.location = await(getCoordinates(req.body.post.location));
+        }
 		// save the updated post into the db
 		post.save();
         // redirect to show page
