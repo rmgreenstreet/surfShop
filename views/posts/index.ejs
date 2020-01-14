@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html>
-    <body>
-        <h1>Posts Index</h1>
-        <a href="/posts/new"><button>New Post</button></a>
-        <% posts.forEach(post => { %>
-            <div class="post">
-                <h1><%= post.title %></h1>
-                <img src="<%= post.images[0].url %>" width="100px">
-                <p>Price: <%= post.price %></p>
-                <p>Description: <%= post.description %></p>
-                <p>Location: <%= post.location.formattedAddress %></p>
-                <p><a href="/posts/<%= post._id %>">More Info</a></p>
-            </div>
-        <% }); %>
-    </body>
-</html>
+<% layout('layouts/boilerplate') -%>
+<div class="container">
+    <h1>Posts Index</h1>
+    <a href="/posts/new"><button>New Post</button></a>
+    <% posts.forEach(post => { %>
+        <div class="post">
+            <h1><%= post.title %></h1>
+            <img src="<%= post.images[0].url %>" width="100px">
+            <p>Price: <%= post.price %></p>
+            <p>Description: <%= post.description %></p>
+            <p>Location: <%= post.location.formattedAddress %></p>
+            <p><a href="/posts/<%= post._id %>">More Info</a></p>
+        </div>
+    <% }); %>
+</div>

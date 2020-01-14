@@ -1,27 +1,33 @@
-<%- include("../partials/header") %>
+<% layout('layouts/boilerplate') -%>
+<div class="container">
+	<h1>Edit Post!</h1>
 
-<h1>Edit Post!</h1>
-
-<form action="/posts/<%= post.id %>?_method=PUT" method="POST" id="postEditForm" enctype="multipart/form-data">
-	<div><input type="text" name="post[title]" placeholder="Title" value="<%= post.title  %>"></div>
-	<div><input type="text" name="post[price]" placeholder="Price" value="<%= post.price  %>"></div>
-	<div>
-		<input type="file" id="imageUpload" accept="images/*" name="image" multiple />
+	<form action="/posts/<%= post.id %>?_method=PUT" method="POST" id="postEditForm" enctype="multipart/form-data">
+		<div><input type="text" name="post[title]" placeholder="Title" value="<%= post.title  %>"></div>
+		<div><input type="text" name="post[price]" placeholder="Price" value="<%= post.price  %>"></div>
 		<div>
-            <% post.images.forEach(function(image, i) { %>
-                <img src="<%= image.url %>" width="100px" />
-                <label for="image<%= i %>">Delete?</label>
-                <input type="checkbox" name="deleteImages[]" class="imageDeleteCheckbox" id="image<%= i %>" value="<%= image.public_id %>">
-            <% }); %>
+			<input type="file" id="imageUpload" accept="images/*" name="image" multiple />
+			<div>
+				<% post.images.forEach(function(image, i) { %>
+					<img src="<%= image.url %>" width="100px" />
+					<label for="image<%= i %>">Delete?</label>
+					<input type="checkbox" name="deleteImages[]" class="imageDeleteCheckbox" id="image<%= i %>" value="<%= image.public_id %>">
+				<% }); %>
+			</div>
 		</div>
-	</div>
-	<div>
-		<textarea name="post[description]" placeholder="Description"><%= post.description  %></textarea>
-	</div>
-	<div><input type="text" name="post[location]" placeholder="Location" value="<%= post.location.formattedAddress %>"></div>
+		<div>
+			<textarea name="post[description]" placeholder="Description"><%= post.description  %></textarea>
+		</div>
+		<div><input type="text" name="post[location]" placeholder="Location" value="<%= post.location.formattedAddress %>"></div>
 
-	<input type="submit">
-</form>
+		<input type="submit">
+	</form>
+	<a href="/posts/<%= post.id %>">
+		<button>
+			Back
+		</button>
+	</a>
+</div>
 
 <script>
 	// find post edit form
@@ -48,5 +54,3 @@
 	});
 
 </script>
-
-<%- include("../partials/footer") %>
