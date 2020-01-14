@@ -67,6 +67,7 @@ module.exports = {
         post.location.lat = locationObj.lat;
         post.location.lng = locationObj.lng;
         post.save();
+        req.session.success="Post Created!";
         req.flash('success','Post Created!');
 		res.redirect(`/posts/${post.id}`);
 	},
@@ -124,6 +125,7 @@ module.exports = {
 		// save the updated post into the db
 		post.save();
         // redirect to show page
+        req.session.success='Post Updated!';
         req.flash('success','Post Updated!');
 		res.redirect(`/posts/${post.id}`);
 	},
@@ -133,6 +135,7 @@ module.exports = {
             await imageDelete(image.public_id);
         }
         await post.remove();
+        req.session.success='Post Deleted!';
         req.flash('success','Post Deleted!');
         res.redirect('/posts/');
     }

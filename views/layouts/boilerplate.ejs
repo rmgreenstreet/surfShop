@@ -44,19 +44,22 @@
 			</div>
 		  </div>
 		</nav>
-		
+
 		<div class="container mt-2">
-			<% if(error && error.length > 0){ %>
-				<div class="alert alert-danger" role="alert">
+			<% if(success && success.length) { %>
+				<div class="alert alert-success">
+					<%= success %>
+				</div>
+			<% } %>
+			<% if(error && error.length) { %>
+				<div class="alert alert-danger">
 					<%= error %>
 				</div>
 			<% } %>
-			<% if (success && success.length > 0) { %>
-				<div class="alert alert-success" role="alert">
-					 <%= success %>
-				</div>
-			<% } %>
 		</div>
+		
+		
+		
                 
         <%- body -%>
 

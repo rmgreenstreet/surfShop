@@ -62,8 +62,8 @@ app.use(passport.session());
 app.use(flash());
 app.use(function(req, res, next){
 	res.locals.currentUser = req.user;
-	res.locals.error = req.flash("error");
-	res.locals.success = req.flash("success");
+	// res.locals.error = req.flash("error");
+	// res.locals.success = req.flash("success");
 	next();
 });
 
@@ -84,7 +84,7 @@ app.use(function (req,res,next) {
 	//delete flash message after sending it to the page so it doesn't show again
 	delete req.session.success;
 	//set success flash message
-	res.locals.error = req.session.error.message || "";
+	res.locals.error = req.session.error || "";
 	//delete flash message after sending it to the page so it doesn't show again
 	delete req.session.error;
 	//continue on to the next function in the middlware/route chain
