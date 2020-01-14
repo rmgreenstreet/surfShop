@@ -49,11 +49,11 @@ module.exports = {
     async postIndex(req,res,next) {
         let posts = await Post.find({});
         console.log(posts.length+' posts found');
-        res.render('posts/index',{posts});
+        res.render('posts/index',{posts, title: 'SurfShop - All Posts', page:'all_posts' });
     },
     //new post page
     postNew(req,res,next) {
-        res.render('posts/new');
+        res.render('posts/new', { title: 'SurfShop - New Post', page:'new_post' });
     },
     //create new post
     async postCreate(req, res, next) {
@@ -73,12 +73,12 @@ module.exports = {
     //show single post
     async postShow (req,res,next) {
         post = await Post.findById(req.params.id);
-        res.render('posts/show',{post});
+        res.render('posts/show',{post, title: 'SurfShop - View '+post.title, page:'view_post' });
     },
     //edit post
     async postEdit (req,res,next) {
         let post = await Post.findById(req.params.id);
-        res.render('posts/edit',{post});
+        res.render('posts/edit',{post, title: 'SurfShop - Edit '+post.title, page:'edit_post' });
     },
     // Posts Update
 	async postUpdate(req, res, next) {

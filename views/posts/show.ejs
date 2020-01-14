@@ -1,5 +1,4 @@
 <% layout('layouts/boilerplate') -%>
-
 <div class ='container'>
 
     <h1><%= post.title %></h1>
@@ -24,32 +23,16 @@
         <button>Back</button>
         </a>
     </p>
+    
 </div>
+
 <script>
-    function initMap() {
     var lat = <%= post.location.lat %>;
     var lng = <%= post.location.lng %>;
-    var center = {lat: lat, lng: lng };
-    var map = new 	google.maps.Map(document.getElementById('map'), {
-        zoom: 10,
-        center: center,
-        scrollwheel: false
-    });
     var contentString = `
         <strong><%= post.title %><br />
         <%= post.location.formattedAddress %></strong>
-    `
-    
-    var infowindow = new google.maps.InfoWindow({
-        content: contentString
-    });
-    var marker = new google.maps.Marker({
-        position: center,
-        map: map
-    });
-    marker.addListener('click', function() {
-        infowindow.open(map, marker);
-    });
-    }
+    `;
 </script>
+<script src="/js/post-show.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLEMAPS_KEY %>&callback=initMap"></script>

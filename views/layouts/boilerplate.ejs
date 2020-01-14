@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>SurfShop</title>
+        <title><%= title %></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="icon" href="/img/favicon.png" type="image/x-icon/">
@@ -26,13 +26,14 @@
 		  </button>
 		  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 			<div class="navbar-nav ml-auto">
-			  <a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'posts' ? 'active' : '' %>" href="/posts">Posts<span class="sr-only">(current)</span></a>
+			  <a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'all_posts' ? 'active' : '' %>" href="/posts">Posts<span class="sr-only">(current)</span></a>
 				<% if(!currentUser){ %>
-			  <a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login" id="login_button">Log In</a>
-			  <a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register" id="signup_button">Sign Up</a>
+					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login" id="login_button">Log In</a>
+					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register" id="signup_button">Sign Up</a>
 				<% } else { %>
-				<a class="nav-item nav-link" href="/profile/<%= currentUser._id %>">Signed In As <%= currentUser.username %></a>
-				<a class="nav-item nav-link" href="/logout" id="signup_button">Log Out</a>
+					<a class="nav-item nav-link" href="/profile/<%= currentUser._id %>">Signed In As <%= currentUser.username %></a>
+					<a class="nav-item nav-link" href="/logout" id="signup_button">Log Out</a>
+					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'new' ? 'active' : '' %>" href="/posts/new" id="new_post">New Post</a>
 				<% }; %>
 			<form name="searchCampgrounds" action="/campgrounds" method="get" class="form-inline">
 				<div class="input-group">
