@@ -1,11 +1,11 @@
 require('dotenv').config({ path: '.env' });
+const bodyParser = require('body-parser');
 const createError = require('http-errors');
 const express = require('express');
 const engine = require('ejs-mate');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const serveFavicon = require('serve-favicon');
 const passport = require('passport');
@@ -43,7 +43,8 @@ app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, './public')));
 console.log(path.resolve(__dirname, './public'))
@@ -57,7 +58,6 @@ app.use(expressSession({
 		resave:false,
 		saveUninitialized:false
 		}));
-app.use(bodyParser.urlencoded({extended:true}));
 app.use(passport.session());
 app.use(flash());
 app.use(function(req, res, next){
@@ -77,6 +77,11 @@ passport.deserializeUser(User.deserializeUser());
 
 //set local variables middleware
 app.use(function (req,res,next) {
+	req.user={
+		'_id': '5e1e44d82236de3cecc09df1',
+		'username':'robert'
+	};
+	res.locals.currentUser = req.user;
 	//set default page title if one is not specified
 	res.locals.title='Surf Shop';
 	//set success flash message

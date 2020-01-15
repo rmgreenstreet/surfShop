@@ -12,18 +12,104 @@
     <div CLASS="card m-2">
         <div id="map"></div>
     </div>
-    <p><a href="/posts/<%= post._id %>/edit">
-        <button>Edit</button>
-    </a></p>
-    <p><form action="/posts/<%= post.id %>?_method=DELETE" method="post">
-        <button type="submit">Delete</button>
-    </form></p>
-    <p>
-        <a href="/posts">
-        <button>Back</button>
-        </a>
-    </p>
-    
+    <div class="card mb-2">
+        <div class="card-title">
+            <h2>Reviews</h2>
+        </div>
+        <div class="card-body">
+            <h4>Average Rating: <%= (post.averageRating ? Math.round((post.averageRating*4)/4).toFixed(1)+" Stars ("+post.reviews.length+" Review)" : 'No Reviews Yet') %></h4>
+            <div class="review">
+                <% post.reviews.forEach((review) => { %>
+                    <p><%= review.body %> - <%= review.rating %> Stars<%= (review.author.username ? ' - '+review.author.username : ' - Anonymous') %></p>
+                    <% if(review.author.equals(currentUser._id)) { %>
+                        <button class="btn btn-warning toggle-edit-form">Edit Review</button>
+                        <div id="editReview[<%= post.reviews.indexOf(review) %>]" class="edit-review-form mb-2" style="display:none;">
+                        <h2>Edit Review</h2>  
+                        <form class="" action="/posts/<%= post.id %>/reviews/<%= review._id %>?_method=PUT" method="POST">
+                                <div class="form-group">
+                                    <label for="reviewBody[<%= post.reviews.indexOf(review) %>]">Your Review</label>
+                                    <textarea name="review[body]" id="reviewBody[<%= post.reviews.indexOf(review) %>]" required class="d-block"><%= review.body %></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <p>1-5 Rating</p>
+                                    <label for="editRating[<%= post.reviews.indexOf(review) %>]1" class="">1</label>
+                                    <input type="radio" name="review[rating]" value="1" id="editRating[<%= post.reviews.indexOf(review) %>]1" <%= review.rating === 1 ? 'checked' : '' %>>
+                                    <label for="editRating[<%= post.reviews.indexOf(review) %>]2" class="">2</label>
+                                    <input type="radio" name="review[rating]" value="2" id="editRating[<%= post.reviews.indexOf(review) %>]2" <%= review.rating === 2 ? 'checked' : '' %>>
+                                    <label for="editRating[<%= post.reviews.indexOf(review) %>]3" class="">3</label>
+                                    <input type="radio" name="review[rating]" value="3" id="editRating[<%= post.reviews.indexOf(review) %>]3" <%= review.rating === 3 ? 'checked' : '' %>>
+                                    <label for="editRating[<%= post.reviews.indexOf(review) %>]4" class="">4</label>
+                                    <input type="radio" name="review[rating]" value="4" id="editRating[<%= post.reviews.indexOf(review) %>]4" <%= review.rating === 4 ? 'checked' : '' %>>
+                                    <label for="editRating[<%= post.reviews.indexOf(review) %>]5" class="">5</label>
+                                    <input type="radio" name="review[rating]" value="5" id="editRating[<%= post.reviews.indexOf(review) %>]5" <%= review.rating === 5 ? 'checked' : '' %>>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success">
+                                        Submit    
+                                    </button>
+                            </form> 
+                        </div>
+                        <script>
+                            $('.toggle-edit-form').on('click', function() {
+                                $(this).text() === 'Edit Review' ? $(this).text('Cancel Edit'):$(this).text('Edit Review');
+                                $(this).siblings('.edit-review-form').toggle(500);
+                            });
+                        </script>
+                    <% } %>
+                    <hr/>
+                <% }); %>
+            </div>
+            <div id="new-review-form" class="mt-2">
+                <h4>Write A Review</h4>
+                <form action="/posts/<%= post.id %>/reviews" method="post">
+                    <div class="form-group">
+                        <label for="reviewBody">Your Review</label>
+                        <textarea name="review[body]" id="reviewBody" required class="d-block"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <p>1-5 Rating</p>
+                        <label for="1" class="">1</label>
+                        <input type="radio" name="review[rating]" value="1" id="1">
+                        <label for="2" class="">2</label>
+                        <input type="radio" name="review[rating]" value="2" id="2">
+                        <label for="3" class="">3</label>
+                        <input type="radio" name="review[rating]" value="3" id="3">
+                        <label for="4" class="">4</label>
+                        <input type="radio" name="review[rating]" value="4" id="4">
+                        <label for="5" class="">5</label>
+                        <input type="radio" name="review[rating]" value="5" id="5">
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-success">
+                            Submit Review    
+                        </button>
+                    </div>
+                </form>
+            </div>
+                
+        </div>
+    </div>
+    <div id="post-edit-buttons" class="row m-2">
+        <div class="col-2 col-md-6">
+            <div class="row space-between">
+                <div class="col">
+                    <a href="/posts/<%= post._id %>/edit">
+                        <button class="btn btn-warning">Edit Post</button>
+                    </a>
+                </div>
+                <div class="col">
+                    <form action="/posts/<%= post.id %>?_method=DELETE" method="post">
+                        <button type="submit" class="btn btn-danger">Delete Post</button>
+                    </form>
+                </div>
+                <div class="col">
+                    <a href="/posts">
+                        <button class="btn btn-info">Back To Posts</button>
+                    </a>
+                </div>
+            </div>    
+        </div>  
+    </div>
 </div>
 
 <script>
@@ -33,6 +119,7 @@
         <strong><%= post.title %><br />
         <%= post.location.formattedAddress %></strong>
     `;
+
 </script>
 <script src="/js/post-show.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLEMAPS_KEY %>&callback=initMap"></script>

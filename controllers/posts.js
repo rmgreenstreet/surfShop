@@ -3,6 +3,8 @@ const Post = require('../models/post');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
 const NodeGeocoder = require('node-geocoder');
+const Review = require('../models/review');
+const User = require('../models/user');
 
 
 //configure cloudinary upload settings
@@ -73,7 +75,14 @@ module.exports = {
 	},
     //show single post
     async postShow (req,res,next) {
-        post = await Post.findById(req.params.id);
+        post = await Post.findById(req.params.id).populate({
+            path:'review',
+            options:{sort: {'_id':-1}},
+            populate:{
+                path:'author',
+                model:'User'
+            }
+        });
         res.render('posts/show',{post, title: 'SurfShop - View '+post.title, page:'view_post' });
     },
     //edit post
@@ -133,6 +142,9 @@ module.exports = {
         let post = await Post.findById(req.params.id);
         for (const image of post.images) {
             await imageDelete(image.public_id);
+        }
+        for (const review of post.reviews) {
+            await Review.findByIdAndRemove(review._id);
         }
         await post.remove();
         req.session.success='Post Deleted!';

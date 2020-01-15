@@ -24,13 +24,11 @@ const postSchema = new Schema({
       type:Schema.Types.ObjectId,
       ref:'User'
     },
-  reviews:[
-      {
-        type:Schema.Types.ObjectId,
-        ref:'Review'
-      }
-    ],
-    averageReview:Number
+  reviews:[],
+  averageRating:{
+    type:Number,
+    default:0
+  }
 });
 
 module.exports = mongoose.model('Post',postSchema);

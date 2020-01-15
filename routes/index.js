@@ -2,6 +2,24 @@ const express = require('express');
 const router = express.Router();
 const { postRegister, postLogin, getLogout } = require('../controllers');
 const { asyncErrorHandler } = require('../middleware');
+const multer = require('multer');
+//configure where/how files are stored in cloudinary
+const storage = multer.diskStorage({
+    filename: function(req,file,callback) {
+        callback(null,Date.now() + file.originalname);
+    }
+});
+//only accept image files for cloudinary
+const imageFilter = (req,file,cb) => {
+    if (!file.originalname.match(/\.jpg|jpeg|png|gif)$/i)) {
+        return cb(new Error('Only image files (jpg, jpeg, png, gif) are allowed!'), false);
+    }
+    else {
+        cb(null,true);
+    }
+};
+//configure multer as upload parameters for cloudinary
+const upload = multer({storage:storage, filefilter:imageFilter});
 
 /* GET home page. */
 router.get('/', (req, res, next) => {
@@ -10,12 +28,11 @@ router.get('/', (req, res, next) => {
 
 /* GET create user page  */
 router.get('/register', (req, res, next) => {
-  res.send('GET /register');
-  // res.render('index', { title: 'SurfShop - Home', page:'home' });
+  res.render('register', { title: 'SurfShop - Register', page:'Register' });
 });
 
 /* POST create user page  */
-router.post('/register',asyncErrorHandler(postRegister));
+router.post('/register', upload.single('image'),asyncErrorHandler(postRegister));
 
 /* GET login page  */
 router.get('/login', (req, res, next) => {

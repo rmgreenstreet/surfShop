@@ -1,30 +1,7 @@
 const User = require('../models/user');
 const cloudinary = require('cloudinary').v2;
-const multer = require('multer');
 const passport = require('passport');
-// const { storage, imageFilter, upload } = require('configVars.js');
-
-//configure where/how files are stored in cloudinary
-let storage = multer.diskStorage({
-    filename: function(req,file,callback) {
-        callback(null,Date.now() + file.originalname);
-    },
-    folder:'surf_shop/users'
-});
-
-//only accept image files for cloudinary
-let imageFilter = function (req,file,cb) {
-    //accept image files only
-    if (!file.originalname.match(/\.jpg|jpeg|png|gif)$/i)) {
-        return cb(new Error('Only image files (jpg, jpeg, png, gif) are allowed!'), false);
-    }
-    else {
-        cb(null,true);
-    }
-};
-
-//configure multer as upload parameters for cloudinary
-let upload = multer({storage:storage, filefilter:imageFilter});
+const fs = require('fs');
 
 //configure cloudinary upload settings
 cloudinary.config({
@@ -33,15 +10,13 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-function userImageUpload(file) {
-    cloudinary.uploader.upload(file, (err,result) => {
-        if(err) {
-            console.log(err.message);
-        }
-        else {
-            return result;
-        }
-    });
+async function imageUpload(file,documentType) {
+    uploadedImage={};
+    let image = await cloudinary.uploader.upload(file, {folder:'surf_shop/dev/'+documentType});
+    uploadedImage.url=image.secure_url;
+    uploadedImage.public_id=image.public_id;
+    await fs.unlink(file,(err)=>{});
+    return uploadedImage;
 }
 
 module.exports = {
@@ -49,35 +24,40 @@ module.exports = {
     async postRegister (req,res,next) {
         console.log('registering user');
         //send uploaded image to cloudinary
-            let result = userImageUpload(req.file.path);
-            //set adminStatus to false to initialize
-            let adminStatus = false;
-                if(req.body.adminCode === process.env.ADMINCODE) {
-                    //if adminCode provided matches secret, set user's adminStatus to true, giving extra permissions
-                    adminStatus = true;
-                }
-                //create a new User object with properties submitted
-            const newUser = new User({
-                username:req.body.username,
-                email:req.body.email,
-                //set User's image url and public_id to those returned from Cloudinary
-                'image.url':result.url,
-                'image.public_id':result.public_id,
-                isAdmin:adminStatus});
-                // register new User using these properties
-            await User.register(newUser,req.body.password);
-            passport.authenticate('local')(req,res,()=> {
-                if(adminStatus === true) {
-                    //if new User is an admin, send this message
-                    req.flash('success','Admin Account Created! Welcome to the team, '+req.body.username)
-                }
-                else {
-                    //if new User is not admin, send this message
-                    req.flash('success','Account created! Welcome to the club, '+req.body.username+'!');
-                }
-                //redirect to the user's profile after logging in
-                res.redirect('/profile/'+user._id);
-            });
+        let result = await imageUpload(req.file.path);
+        //set adminStatus to false to initialize
+        let adminStatus = false;
+        if(req.body.adminCode && req.body.admincode === process.env.ADMINCODE) {
+            //if adminCode provided matches secret, set user's adminStatus to true, giving extra permissions
+            adminStatus = true;
+        }
+        else {
+            adminStatus=false;
+        }
+            //create a new User object with properties submitted
+        const newUser = new User({
+            username: req.body.username,
+            email: req.body.email,
+            //set User's image url and public_id to those returned from Cloudinary
+            'image.url': result.secure_url,
+            'image.public_id': result.public_id,
+            isAdmin: adminStatus
+        });
+            // register new User using these properties
+        await User.register(newUser,req.body.password);
+        passport.authenticate('local')(req,res,()=> {
+            if(adminStatus === true) {
+                //if new User is an admin, send this message
+                req.flash('success','Admin Account Created! Welcome to the team, '+req.body.username)
+            }
+            else {
+                //if new User is not admin, send this message
+                req.flash('success','Account created! Welcome to the club, '+req.body.username+'!');
+            }
+            res.redirect('/');
+            //redirect to the user's profile after logging in
+            // res.redirect('/profile/'+user._id);
+        });
     },
     //POST to Login page
     async postLogin (req,res,next) {
