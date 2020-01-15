@@ -60,8 +60,10 @@ module.exports = {
     //create new post
     async postCreate(req, res, next) {
         req.body.post.images=[];
-        for (const file of req.files) {
-            req.body.post.images.push(await imageUpload(file,'post'));
+        if(req.files && req.files.length) {
+            for (const file of req.files) {
+                req.body.post.images.push(await imageUpload(file,'post'));
+            }
         }
         let post = await Post.create(req.body.post);
         let locationObj = await(getCoordinates(req.body.post.location));
@@ -76,7 +78,8 @@ module.exports = {
     //show single post
     async postShow (req,res,next) {
         post = await Post.findById(req.params.id).populate({
-            path:'review',
+            path:'reviews',
+            model:'Review',
             options:{sort: {'_id':-1}},
             populate:{
                 path:'author',
@@ -144,7 +147,7 @@ module.exports = {
             await imageDelete(image.public_id);
         }
         for (const review of post.reviews) {
-            await Review.findByIdAndRemove(review._id);
+            await Review.findByIdAndRemove(review);
         }
         await post.remove();
         req.session.success='Post Deleted!';
