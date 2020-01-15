@@ -15,7 +15,7 @@ async function calculateAverageRating(post) {
     console.log('review total is: '+reviewTotal);
     post.averageRating = (reviewTotal/post.reviews.length);
     console.log('post\'s new average rating is: '+post.averageRating);
-    return post;
+    return await post.save();
 }
 
 module.exports = {
@@ -32,7 +32,7 @@ module.exports = {
         //push the review into the post
         await post.reviews.push(review._id);
         console.log(post.reviews);
-        //calculate the average rating of the post
+        //calculate the average rating of the post and save the post with the new average and new review
         try {
             await calculateAverageRating(post);
         }
@@ -42,7 +42,6 @@ module.exports = {
             return res.redirect('/posts/'+post.id);
         }
         //save the post with the new review
-        await post.save();
         req.session.success="Review Created!";
 		res.redirect('/posts/'+post.id);
 	},
@@ -50,10 +49,9 @@ module.exports = {
 	async reviewUpdate(req, res, next) {
         //find review in DB
         await Review.findByIdAndUpdate(req.params.review_id,req.body.review);
-        let post = await Post.findById(req.params.id).populate({
-            path:'reviews',
-            model:'Review'
-        });
+        //find post in order to update average rating
+        let post = await Post.findById(req.params.id);
+        //calculate new average rating and save post
         await calculateAverageRating(post);
         // redirect to show page
         req.session.success='Review Updated!';

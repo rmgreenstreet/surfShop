@@ -16,7 +16,7 @@
             <h2>Reviews</h2>
         </div>
         <div class="card-body">
-            <h4>Average Rating: <%= (post.averageRating ? (Math.round(post.averageRating*4)/4).toFixed(1)+" Stars ("+post.reviews.length+" Review"+(post.reviews.length === 1 ? '' : 's')+")" : 'No Reviews Yet') %></h4>
+            <h4>Average Rating: <%= (post.averageRating ? (Math.round(post.averageRating*4)/4).toFixed(2)+" Stars ("+post.reviews.length+" Review"+(post.reviews.length === 1 ? '' : 's')+")" : 'No Reviews Yet') %></h4>
                 <% post.reviews.forEach((review) => { %>
                     <div class="review">
                         <p><%= review.body %> - <%= review.rating %> Stars<%= (review.author.username ? ' - '+review.author.username : ' - Anonymous') %></p>
