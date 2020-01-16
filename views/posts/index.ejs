@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') -%>
 <div class="container">
     <h1>Posts Index</h1>
-    <a href="/posts/new"><button>New Post</button></a>
+    <a href="/posts/new"><button class="btn btn-info">New Post</button></a>
     <% posts.forEach(post => { %>
         <div class="post">
             <h1><%= post.title %></h1>
