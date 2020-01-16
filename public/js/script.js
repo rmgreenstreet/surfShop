@@ -2,7 +2,7 @@ function initMap() {
     if($('#map')) {
         var center = {lat: lat, lng: lng };
         var map = new 	google.maps.Map(document.getElementById('map'), {
-            zoom: 10,
+            zoom: 12,
             center: center,
             scrollwheel: false
         });

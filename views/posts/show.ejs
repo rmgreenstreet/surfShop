@@ -102,10 +102,10 @@
             </div>
         </div>
     </div>
-    <% if(post.author.equals(currentUser._id)) { %>
-        <div id="post-edit-buttons" class="row m-2">
-            <div class="col-2 col-md-6">
-                <div class="row space-between">
+    <div id="post-edit-buttons" class="row m-2">
+        <div class="col-2 col-md-6">
+            <div class="row space-between">
+                <% if(post.author.equals(currentUser._id)) { %>
                     <div class="col">
                         <a href="/posts/<%= post._id %>/edit">
                             <button class="btn btn-warning">Edit Post</button>
@@ -116,16 +116,15 @@
                             <button type="submit" class="btn btn-danger">Delete Post</button>
                         </form>
                     </div>
-                    <div class="col">
-                        <a href="/posts">
-                            <button class="btn btn-info">Back&nbsp;To&nbsp;Posts</button>
-                        </a>
-                    </div>
-                </div>    
-            </div>  
-        </div>
-    <% } %>
-        
+                <% } %>
+                <div class="col">
+                    <a href="/posts">
+                        <button class="btn btn-info">Back To Posts</button>
+                    </a>
+                </div>
+            </div>     
+        </div> 
+    </div>
 </div>
 
 <script>
