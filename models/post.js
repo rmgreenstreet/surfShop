@@ -36,6 +36,7 @@ const postSchema = new Schema({
     default:0
   }
 });
+//removes all reviews associated with the particular post when 'remove' is called. only works if you have found the particular post first, not using Post.findByIdAndRemove
 postSchema.pre('remove', async function () {
   console.log('removing reviews');
   await Review.remove({

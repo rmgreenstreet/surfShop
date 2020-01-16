@@ -143,14 +143,13 @@ module.exports = {
 		res.redirect(`/posts/${post.id}`);
 	},
     async postDestroy (req,res,next) {
-        await Post.findById(req.params.id);
-        // let post = await Post.findById(req.params.id);
-        // for (const image of post.images) {
-        //     await imageDelete(image.public_id);
-        // }
-        // for (const review of post.reviews) {
-        //     await Review.findByIdAndRemove(review);
-        // }
+        //find the post to be deleted
+        let post = await Post.findById(req.params.id);
+        //remove all images from the post
+        for (const image of post.images) {
+            await imageDelete(image.public_id);
+        }
+        //calling remove separately from findbyId because the pre hook in the post model to delete reviews associated with the post will only fire on the found document itself, not on querying the model
         await post.remove();
         req.session.success='Post Deleted!';
         res.redirect('/posts/');
