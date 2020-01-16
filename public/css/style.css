@@ -16,3 +16,7 @@ a {
 button {
   white-space:nowrap;
 }
+
+.inlineRadio {
+  white-space:nowrap;
+}

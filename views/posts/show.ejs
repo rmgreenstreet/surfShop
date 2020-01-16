@@ -5,18 +5,18 @@
             <h1><%= post.title %></h1>
         </div>
 
-        <div class="card-body mb-2">
+        <div class="card-body">
             <% post.images.forEach(function(image) { %>
                 <img src="<%= image.url %>" width="100px" style="margin-bottom:20px;">
             <% }); %>
             
             <div class="card-text">
-                <p>Price: <%= post.price %></p>
+            <p>Price: <%= post.price %></p>
             <p>Description: <%= post.description %></p>
             <p>Location: <%= post.location.formattedAddress %></p>
             </div>
             <div CLASS="card">
-                <div id="map" class="card-img-top"></div>
+                <div id="map"></div>
             </div>
         </div>
     </div>
@@ -33,41 +33,45 @@
                             <div class="showEditControls mt-2">
                                 <button class="btn btn-warning toggle-review-edit-form mb-2">Edit Review</button>
                                 <div id="editReview[<%= post.reviews.indexOf(review) %>]" class="edit-review-form" style="display:none;">
-                                    <h2>Edit Review</h2>  
-                                    <form class="form-inline justify-content-between" action="/posts/<%= post.id %>/reviews/<%= review._id %>?_method=PUT" method="POST">
-                                        <div class="form-group">
-                                            <label for="reviewBody[<%= post.reviews.indexOf(review) %>]" class="d-none form-label">Your Review</label>
-                                            <textarea name="review[body]" id="reviewBody[<%= post.reviews.indexOf(review) %>]" required class="d-block" class="form-control"><%= review.body %></textarea>
+                                    <h4>Edit Review</h3>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <form class="form-inline justify-content-between" action="/posts/<%= post.id %>/reviews/<%= review._id %>?_method=PUT" method="POST">
+                                                <div class="form-group">
+                                                    <label for="reviewBody[<%= post.reviews.indexOf(review) %>]" class="d-none form-label">Your Review</label>
+                                                    <textarea name="review[body]" id="reviewBody[<%= post.reviews.indexOf(review) %>]" required class="form-control" class="form-control"><%= review.body %></textarea>
+                                                </div>
+                                                <div class="form-group my-2 inlineRadio">
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" name="review[rating]" value="1" class="form-check-input" id="editRating[<%= post.reviews.indexOf(review) %>]1" <%= review.rating === 1 ? 'checked' : '' %>>
+                                                        <label for="editRating[<%= post.reviews.indexOf(review) %>]1" class="form-check-label">1</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" name="review[rating]" value="2" class="form-check-input" id="editRating[<%= post.reviews.indexOf(review) %>]2" <%= review.rating === 2 ? 'checked' : '' %>>
+                                                        <label for="editRating[<%= post.reviews.indexOf(review) %>]2" class="form-check-label">2</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" name="review[rating]" value="3" class="form-check-input" id="editRating[<%= post.reviews.indexOf(review) %>]3" <%= review.rating === 3 ? 'checked' : '' %>>
+                                                        <label for="editRating[<%= post.reviews.indexOf(review) %>]3" class="form-check-label">3</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" name="review[rating]" value="4" class="form-check-input" id="editRating[<%= post.reviews.indexOf(review) %>]4" <%= review.rating === 4 ? 'checked' : '' %>>
+                                                        <label for="editRating[<%= post.reviews.indexOf(review) %>]4" class="form-check-label">4</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" name="review[rating]" value="5" class="form-check-input" id="editRating[<%= post.reviews.indexOf(review) %>]5" <%= review.rating === 5 ? 'checked' : '' %>>
+                                                        <label for="editRating[<%= post.reviews.indexOf(review) %>]5" class="form-check-label">5</label>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-success my-2">
+                                                        Submit Review    
+                                                    </button>
+                                                </div>
+                                            </form>
                                         </div>
-                                        <div class="form-group">
-                                            <div class="form-check-inline">
-                                                <input type="radio" name="review[rating]" value="1" id="editRating[<%= post.reviews.indexOf(review) %>]1" <%= review.rating === 1 ? 'checked' : '' %>>
-                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]1" class="form-check-label">1</label>
-                                            </div>
-                                            <div class="form-check-inline">
-                                                <input type="radio" name="review[rating]" value="2" id="editRating[<%= post.reviews.indexOf(review) %>]2" <%= review.rating === 2 ? 'checked' : '' %>>
-                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]2" class="form-check-label">2</label>
-                                            </div>
-                                            <div class="form-check-inline">
-                                                <input type="radio" name="review[rating]" value="3" id="editRating[<%= post.reviews.indexOf(review) %>]3" <%= review.rating === 3 ? 'checked' : '' %>>
-                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]3" class="form-check-label">3</label>
-                                            </div>
-                                            <div class="form-check-inline">
-                                                <input type="radio" name="review[rating]" value="4" id="editRating[<%= post.reviews.indexOf(review) %>]4" <%= review.rating === 4 ? 'checked' : '' %>>
-                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]4" class="form-check-label">4</label>
-                                            </div>
-                                            <div class="form-check-inline">
-                                                <input type="radio" name="review[rating]" value="5" id="editRating[<%= post.reviews.indexOf(review) %>]5" <%= review.rating === 5 ? 'checked' : '' %>>
-                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]5" class="form-check-label">5</label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-success">
-                                                Submit    
-                                            </button>
-                                        </div>
-                                    </form> 
-                                </div>
+                                    </div>
+                                </div>  
                             </div>
                         <% } %>
                         <hr class="mt-2"/>
@@ -82,7 +86,7 @@
                                 <label for="reviewBody" class="form-label d-none">Your Review</label>
                                 <textarea name="review[body]" id="reviewBody" required class="form-control" placeholder="Your Review Here"></textarea>
                             </div>
-                            <div class="form-group my-2">
+                            <div class="form-group my-2 inlineRadio">
                                 <div class="form-check form-check-inline">
                                     <input type="radio" name="review[rating]" value="1" id="1" class="form-check-input">
                                     <label for="1" class="form-check-label">1</label>
@@ -105,7 +109,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success">
+                                <button type="submit" class="btn btn-success my-2">
                                     Submit Review    
                                 </button>
                             </div>
