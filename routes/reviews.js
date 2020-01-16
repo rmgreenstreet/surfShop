@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router({mergeParams:true});
-const { asyncErrorHandler } =require('../middleware');
+const { asyncErrorHandler,
+        isReviewAuthor 
+    } =require('../middleware');
 const {
     reviewCreate,
     reviewUpdate,
@@ -11,9 +13,9 @@ const {
 router.post('/', asyncErrorHandler(reviewCreate));
 
 /* PUT reviews update page  */
-router.put('/:review_id', asyncErrorHandler(reviewUpdate));
+router.put('/:review_id', isReviewAuthor, asyncErrorHandler(reviewUpdate));
 
 /* POST delete review  */
-router.post('/:review_id/', asyncErrorHandler(reviewDestroy));
+router.delete('/:review_id', isReviewAuthor, asyncErrorHandler(reviewDestroy));
 
 module.exports = router;

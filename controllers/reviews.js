@@ -59,9 +59,10 @@ module.exports = {
     },
     //Reviews Destory
     async reviewDestroy (req,res,next) {
-        
+        console.log('deleting review');
+        await Post.findByIdAndUpdate(req.params.id,{$pull: {reviews: req.params.review_id}});
+        await Review.findByIdAndRemove(req.params.review_id);
         req.session.success='Review Deleted!';
-        req.flash('success','Review Deleted!');
-        res.redirect('/posts/');
+        res.redirect(`/posts/${req.params.id}`);
     }
 }

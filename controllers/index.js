@@ -23,8 +23,11 @@ module.exports = {
     // POST to 'Register' page to create new user
     async postRegister (req,res,next) {
         console.log('registering user');
-        //send uploaded image to cloudinary
-        let result = await imageUpload(req.file.path);
+        //if there is an image uploaded, send uploaded image to cloudinary
+        let result;
+        if(req.file) {
+             result = await imageUpload(req.file.path);
+        }
         //set adminStatus to false to initialize
         let adminStatus = false;
         if(req.body.adminCode && req.body.admincode === process.env.ADMINCODE) {
@@ -38,11 +41,13 @@ module.exports = {
         const newUser = new User({
             username: req.body.username,
             email: req.body.email,
-            //set User's image url and public_id to those returned from Cloudinary
-            'image.url': result.secure_url,
-            'image.public_id': result.public_id,
             isAdmin: adminStatus
         });
+        if(req.file) {
+            //set User's image url and public_id to those returned from Cloudinary
+            newUser.image.url= result.secure_url;
+            newUser.image.public_id= result.public_id;
+        }
             // register new User using these properties
         await User.register(newUser,req.body.password);
         passport.authenticate('local')(req,res,()=> {
