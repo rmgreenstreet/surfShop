@@ -143,16 +143,16 @@ module.exports = {
 		res.redirect(`/posts/${post.id}`);
 	},
     async postDestroy (req,res,next) {
-        let post = await Post.findById(req.params.id);
-        for (const image of post.images) {
-            await imageDelete(image.public_id);
-        }
-        for (const review of post.reviews) {
-            await Review.findByIdAndRemove(review);
-        }
+        await Post.findById(req.params.id);
+        // let post = await Post.findById(req.params.id);
+        // for (const image of post.images) {
+        //     await imageDelete(image.public_id);
+        // }
+        // for (const review of post.reviews) {
+        //     await Review.findByIdAndRemove(review);
+        // }
         await post.remove();
         req.session.success='Post Deleted!';
-        req.flash('success','Post Deleted!');
         res.redirect('/posts/');
     }
 }

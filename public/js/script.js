@@ -49,6 +49,11 @@ function checkPostEditForm() {
 
 //toggle edit review form
 $('.toggle-review-edit-form').on('click', function() {
-    $(this).text() === 'Edit Review' ? $(this).text('Cancel Edit'):$(this).text('Edit Review');
-    $(this).siblings('.edit-review-form').toggle(500);
+    $(this).text() === 'Edit' ? $(this).text('Cancel Edit'):$(this).text('Edit');
+    $(this).parent().siblings('.edit-review-form').toggle(500);
 });
+
+//show delete warning for both reviews and posts
+// $('.delete-button').on('click', function () {
+
+// })

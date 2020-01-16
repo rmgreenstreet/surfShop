@@ -31,17 +31,13 @@
                         <p><%= review.body %> - <%= review.rating %> Stars<%= (review.author.username ? ' - '+review.author.username : ' - Anonymous') %></p>
                         <% if(review.author.equals(currentUser._id)) { %>
                             <div class="showEditControls mt-2">
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="row justify-content-start">
-                                                <button class="btn btn-warning toggle-review-edit-form m-1">Edit</button>
-                                                <form action="/posts/<%= post.id %>/reviews/<%= review.id %>?_method=DELETE" method="POST">
-                                                    <button class="btn btn-danger delete-review m-1" type="submit">Delete</button>
-                                                </form>
-                                        </div>
-                                    </div>
+                                <div class="row justify-content-start">
+                                    <button class="btn btn-warning toggle-review-edit-form m-1">Edit</button>
+                                    <form action="/posts/<%= post.id %>/reviews/<%= review.id %>?_method=DELETE" method="POST">
+                                        <button class="btn btn-danger m-1 deleteButton deleteReview" type="submit">Delete</button>
+                                    </form>
                                 </div>
-                                <div id="editReview[<%= post.reviews.indexOf(review) %>]" class="edit-review-form" style="display:none;">
+                                <div id="editReview[<%= post.reviews.indexOf(review) %>]" class="edit-review-form mt-1" style="display:none;">
                                     <h4>Edit Review</h3>
                                     <div class="row">
                                         <div class="col-8">
@@ -86,7 +82,7 @@
                         <hr class="mt-2"/>
                     </div>
                 <% }); %>
-                <% if (post.reviews.filter( author => currentUser._id.equals(author))) { %>
+                <% if (post.reviews.filter( review => review.author.equals(currentUser._id)).length) { %>
                     <div id="noMultipleReviews">
                         <p>You cannot review a post more than once. Please edit your review above</p>
                     </div>
@@ -142,7 +138,7 @@
                             <button class="btn btn-warning m-1">Edit Post</button>
                         </a>
                         <form action="/posts/<%= post.id %>?_method=DELETE" method="post">
-                            <button type="submit" class="btn btn-danger m-1">Delete Post</button>
+                            <button type="submit" class="btn btn-danger m-1 deleteButton deletePost">Delete Post</button>
                         </form>
                 <% } %>
                     <a href="/posts">

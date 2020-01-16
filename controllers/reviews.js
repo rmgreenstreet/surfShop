@@ -22,7 +22,14 @@ module.exports = {
     //create new review
     async reviewCreate(req, res, next) {
         //find the post
-        let post = await Post.findById(req.params.id);
+        let post = await Post.findById(req.params.id).populate('reviews').exec();
+        let hasReviewed = await post.reviews.filter(review => {
+            return review.author.equals(req.user._id);
+        }).length;
+        if(hasReviewed) {
+            req.session.error="Sorry, you can only review each post once";
+            return res.redirect(`/posts/${post.id}`);
+        }
         //create the review
         let review = await Review.create(req.body.review);
         //assign the current user as the author of the review
