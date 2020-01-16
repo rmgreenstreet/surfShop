@@ -1,18 +1,27 @@
 <% layout('layouts/boilerplate') -%>
 <div class ='container'>
-    <h1><%= post.title %></h1>
-    <% post.images.forEach(function(image) { %>
-        <img src="<%= image.url %>" width="100px" style="margin-bottom:20px;">
-    <% }); %>
-    
-    <p>Price: <%= post.price %></p>
-    <p>Description: <%= post.description %></p>
-    <p>Location: <%= post.location.formattedAddress %></p>
-    <div CLASS="card my-2">
-        <div id="map"></div>
-    </div>
     <div class="card mb-2">
-        <div class="card-title">
+        <div class="card-header">
+            <h1><%= post.title %></h1>
+        </div>
+
+        <div class="card-body mb-2">
+            <% post.images.forEach(function(image) { %>
+                <img src="<%= image.url %>" width="100px" style="margin-bottom:20px;">
+            <% }); %>
+            
+            <div class="card-text">
+                <p>Price: <%= post.price %></p>
+            <p>Description: <%= post.description %></p>
+            <p>Location: <%= post.location.formattedAddress %></p>
+            </div>
+            <div CLASS="card">
+                <div id="map" class="card-img-top"></div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-2 bg-light">
+        <div class="card-header">
             <h2>Reviews</h2>
         </div>
         <div class="card-body">
