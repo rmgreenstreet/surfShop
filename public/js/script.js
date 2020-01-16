@@ -47,4 +47,8 @@ function checkPostEditForm() {
     }
 }
 
-
+//toggle edit review form
+$('.toggle-review-edit-form').on('click', function() {
+    $(this).text() === 'Edit Review' ? $(this).text('Cancel Edit'):$(this).text('Edit Review');
+    $(this).siblings('.edit-review-form').toggle(500);
+});

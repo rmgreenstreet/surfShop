@@ -22,26 +22,35 @@
                         <p><%= review.body %> - <%= review.rating %> Stars<%= (review.author.username ? ' - '+review.author.username : ' - Anonymous') %></p>
                         <% if(review.author.equals(currentUser._id)) { %>
                             <div class="showEditControls mt-2">
-                                <button class="btn btn-warning toggle-review-edit-form">Edit Review</button>
-                                <div id="editReview[<%= post.reviews.indexOf(review) %>]" class="edit-review-form my-2" style="display:none;">
+                                <button class="btn btn-warning toggle-review-edit-form mb-2">Edit Review</button>
+                                <div id="editReview[<%= post.reviews.indexOf(review) %>]" class="edit-review-form" style="display:none;">
                                     <h2>Edit Review</h2>  
-                                    <form class="" action="/posts/<%= post.id %>/reviews/<%= review._id %>?_method=PUT" method="POST">
+                                    <form class="form-inline justify-content-between" action="/posts/<%= post.id %>/reviews/<%= review._id %>?_method=PUT" method="POST">
                                         <div class="form-group">
-                                            <label for="reviewBody[<%= post.reviews.indexOf(review) %>]">Your Review</label>
-                                            <textarea name="review[body]" id="reviewBody[<%= post.reviews.indexOf(review) %>]" required class="d-block"><%= review.body %></textarea>
+                                            <label for="reviewBody[<%= post.reviews.indexOf(review) %>]" class="d-none form-label">Your Review</label>
+                                            <textarea name="review[body]" id="reviewBody[<%= post.reviews.indexOf(review) %>]" required class="d-block" class="form-control"><%= review.body %></textarea>
                                         </div>
                                         <div class="form-group">
-                                            <p>1-5 Rating</p>
-                                            <label for="editRating[<%= post.reviews.indexOf(review) %>]1" class="">1</label>
-                                            <input type="radio" name="review[rating]" value="1" id="editRating[<%= post.reviews.indexOf(review) %>]1" <%= review.rating === 1 ? 'checked' : '' %>>
-                                            <label for="editRating[<%= post.reviews.indexOf(review) %>]2" class="">2</label>
-                                            <input type="radio" name="review[rating]" value="2" id="editRating[<%= post.reviews.indexOf(review) %>]2" <%= review.rating === 2 ? 'checked' : '' %>>
-                                            <label for="editRating[<%= post.reviews.indexOf(review) %>]3" class="">3</label>
-                                            <input type="radio" name="review[rating]" value="3" id="editRating[<%= post.reviews.indexOf(review) %>]3" <%= review.rating === 3 ? 'checked' : '' %>>
-                                            <label for="editRating[<%= post.reviews.indexOf(review) %>]4" class="">4</label>
-                                            <input type="radio" name="review[rating]" value="4" id="editRating[<%= post.reviews.indexOf(review) %>]4" <%= review.rating === 4 ? 'checked' : '' %>>
-                                            <label for="editRating[<%= post.reviews.indexOf(review) %>]5" class="">5</label>
-                                            <input type="radio" name="review[rating]" value="5" id="editRating[<%= post.reviews.indexOf(review) %>]5" <%= review.rating === 5 ? 'checked' : '' %>>
+                                            <div class="form-check-inline">
+                                                <input type="radio" name="review[rating]" value="1" id="editRating[<%= post.reviews.indexOf(review) %>]1" <%= review.rating === 1 ? 'checked' : '' %>>
+                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]1" class="form-check-label">1</label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <input type="radio" name="review[rating]" value="2" id="editRating[<%= post.reviews.indexOf(review) %>]2" <%= review.rating === 2 ? 'checked' : '' %>>
+                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]2" class="form-check-label">2</label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <input type="radio" name="review[rating]" value="3" id="editRating[<%= post.reviews.indexOf(review) %>]3" <%= review.rating === 3 ? 'checked' : '' %>>
+                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]3" class="form-check-label">3</label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <input type="radio" name="review[rating]" value="4" id="editRating[<%= post.reviews.indexOf(review) %>]4" <%= review.rating === 4 ? 'checked' : '' %>>
+                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]4" class="form-check-label">4</label>
+                                            </div>
+                                            <div class="form-check-inline">
+                                                <input type="radio" name="review[rating]" value="5" id="editRating[<%= post.reviews.indexOf(review) %>]5" <%= review.rating === 5 ? 'checked' : '' %>>
+                                                <label for="editRating[<%= post.reviews.indexOf(review) %>]5" class="form-check-label">5</label>
+                                            </div>
                                         </div>
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-success">
@@ -52,7 +61,7 @@
                                 </div>
                             </div>
                         <% } %>
-                        <hr/>
+                        <hr class="mt-2"/>
                     </div>
                 <% }); %>
             <div id="new-review-form" class="mt-2">
@@ -93,27 +102,30 @@
             </div>
         </div>
     </div>
-    <div id="post-edit-buttons" class="row m-2">
-        <div class="col-2 col-md-6">
-            <div class="row space-between">
-                <div class="col">
-                    <a href="/posts/<%= post._id %>/edit">
-                        <button class="btn btn-warning">Edit Post</button>
-                    </a>
-                </div>
-                <div class="col">
-                    <form action="/posts/<%= post.id %>?_method=DELETE" method="post">
-                        <button type="submit" class="btn btn-danger">Delete Post</button>
-                    </form>
-                </div>
-                <div class="col">
-                    <a href="/posts">
-                        <button class="btn btn-info">Back To Posts</button>
-                    </a>
-                </div>
-            </div>    
-        </div>  
-    </div>
+    <% if(post.author.equals(currentUser._id)) { %>
+        <div id="post-edit-buttons" class="row m-2">
+            <div class="col-2 col-md-6">
+                <div class="row space-between">
+                    <div class="col">
+                        <a href="/posts/<%= post._id %>/edit">
+                            <button class="btn btn-warning">Edit Post</button>
+                        </a>
+                    </div>
+                    <div class="col">
+                        <form action="/posts/<%= post.id %>?_method=DELETE" method="post">
+                            <button type="submit" class="btn btn-danger">Delete Post</button>
+                        </form>
+                    </div>
+                    <div class="col">
+                        <a href="/posts">
+                            <button class="btn btn-info">Back&nbsp;To&nbsp;Posts</button>
+                        </a>
+                    </div>
+                </div>    
+            </div>  
+        </div>
+    <% } %>
+        
 </div>
 
 <script>
@@ -125,12 +137,4 @@
     `;
 
 </script>
-
-<script>
-    $('.toggle-review-edit-form').on('click', function() {
-        $(this).text() === 'Edit Review' ? $(this).text('Cancel Edit'):$(this).text('Edit Review');
-        $(this).siblings('.edit-review-form').toggle(500);
-    });
-</script>
-<script src="/js/post-show.js"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLEMAPS_KEY %>&callback=initMap"></script>

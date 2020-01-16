@@ -70,6 +70,7 @@ module.exports = {
         post.location.formattedAddress = locationObj.formattedAddress;
         post.location.lat = locationObj.lat;
         post.location.lng = locationObj.lng;
+        post.author = req.user._id;
         post.save();
         req.session.success="Post Created!";
         req.flash('success','Post Created!');
