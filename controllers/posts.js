@@ -91,7 +91,8 @@ module.exports = {
                 model:'User'
             }
         });
-        res.render('posts/show',{post, title: 'SurfShop - View '+post.title, page:'view_post' });
+        const floorRating = post.calculateAverageRating();
+        res.render('posts/show',{post, floorRating, title: 'SurfShop - View '+post.title, page:'view_post' });
     },
     //edit post
     async postEdit (req,res,next) {

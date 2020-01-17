@@ -20,3 +20,7 @@ button {
 .inlineRadio {
   white-space:nowrap;
 }
+
+.fas, .far{
+  color:gold;
+}

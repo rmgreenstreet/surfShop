@@ -9,14 +9,14 @@
     <% posts.docs.forEach(post => { %>
         <div class="card">
             <div class="post">
-                <div class="card-title">
-                    <h1><%= post.title %></h1>
+                <div class="card-img-top">
+                    <% if(post.images && post.images.length) { %>
+                        <img src="<%= post.images[0].url %>" width="100px">
+                    <% } %>
                 </div>
                 <div class="card-body">
-                    <div class="card-image-top">
-                        <% if(post.images && post.images.length) { %>
-                            <img src="<%= post.images[0].url %>" width="100px">
-                        <% } %>
+                    <div class="card-title">
+                        <h1><%= post.title %></h1>
                     </div>
                     <div class="card-text">
                         <p>Price: $<%= post.price %></p>

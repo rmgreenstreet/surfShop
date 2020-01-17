@@ -13,11 +13,12 @@ const expressSession = require('express-session');
 const User = require('./models/user');
 const methodOverride = require('method-override');
 const expressSanitizer = require('express-sanitizer');
-const seedPosts = require('./seeds');
 const flash = require('connect-flash');
 // const starability = require('starability');
 const async = require('async');
 
+// const seedPosts = require('./seeds');
+// seedPosts();
 
 
 
@@ -80,8 +81,12 @@ passport.deserializeUser(User.deserializeUser());
 //set local variables middleware
 app.use(function (req,res,next) {
 	req.user={
-		'_id': '5e1e44d82236de3cecc09df1',
-		'username':'robert'
+		// '_id': '5e1e44d82236de3cecc09df1',
+		// 'username':'robert'
+		// '_id': '5e209d44c963352d4c6f27a5',
+		// 'username':'robert2'
+		'_id': '5e21fd83c1fadc3a8869dfa6',
+		'username':'robert3'
 	};
 	res.locals.currentUser = req.user;
 	//set default page title if one is not specified
@@ -131,8 +136,6 @@ app.use(function(err, req, res, next) {
 //   res.render('error');
 });
 
-
-// seedPosts();
 
 let port = process.env.PORT;
 if (port == null || port == "") {

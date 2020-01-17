@@ -1,29 +1,6 @@
 const Post = require('../models/post');
 const Review = require('../models/review');
 
-async function calculateAverageRating(post) {
-    console.log('calculating averate rating')
-    console.log('post\'s current average rating is: '+post.averageRating);
-    let reviewTotal = 0;
-    if(post.reviews && post.reviews.length) {
-        for (const review of post.reviews) {
-            let foundReview = await Review.findById(review);
-            console.log('current review\'s rating is: '+foundReview.rating);
-            // let foundReview = await Review.findById(review);
-            reviewTotal += foundReview.rating;
-        }
-        //apply average rating to the post
-        console.log('review total is: '+reviewTotal);
-        post.averageRating = (reviewTotal/post.reviews.length);
-    }
-    else {
-        post.averageRating = reviewTotal;
-    }
-    
-    console.log('post\'s new average rating is: '+post.averageRating);
-    return await post.save();
-}
-
 module.exports = {
     //create new review
     async reviewCreate(req, res, next) {
@@ -44,17 +21,8 @@ module.exports = {
         review.save();
         //push the review into the post
         await post.reviews.push(review._id);
-        console.log(post.reviews);
-        //calculate the average rating of the post and save the post with the new average and new review
-        try {
-            await calculateAverageRating(post);
-        }
-        catch(err) {
-            await review.remove();
-            req.session.error='Average Rating Could Not Be Calculated';
-            return res.redirect('/posts/'+post.id);
-        }
         //save the post with the new review
+        post.save();
         req.session.success="Review Created!";
 		res.redirect('/posts/'+post.id);
 	},

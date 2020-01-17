@@ -47,6 +47,29 @@ postSchema.pre('remove', async function () {
   });
 });
 
+postSchema.methods.calculateAverageRating = function() {
+  console.log('calculating averate rating')
+  console.log('post\'s current average rating is: '+this.averageRating);
+  let reviewTotal = 0;
+  if(this.reviews && this.reviews.length) {
+    this.reviews.forEach(review => {
+      reviewTotal += review.rating;
+    });
+    this.averageRating = Math.round((reviewTotal/this.reviews.length)*4)/4;
+    //apply average rating to the post
+    console.log('review total is: '+reviewTotal);
+    this.averageRating = (reviewTotal/this.reviews.length);
+  }
+  else {
+      this.averageRating = reviewTotal;
+  }
+  
+  console.log('post\'s new average rating is: '+post.averageRating);
+  this.save();
+  const floorRating = Math.floor(this.averageRating);
+  return floorRating;
+}
+
 postSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Post',postSchema);
