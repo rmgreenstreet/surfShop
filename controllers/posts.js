@@ -49,7 +49,10 @@ async function getCoordinates(location) {
 module.exports = {
     //posts index
     async postIndex(req,res,next) {
-        let posts = await Post.find({});
+        let posts = await Post.paginate({},{
+            page: req.query.page || 1,
+            limit: 10
+        });
         console.log(posts.length+' posts found');
         res.render('posts/index',{posts, title: 'SurfShop - All Posts', page:'all_posts' });
     },

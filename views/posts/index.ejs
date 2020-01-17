@@ -1,17 +1,32 @@
 <% layout('layouts/boilerplate') -%>
 <div class="container">
-    <h1>Posts Index</h1>
-    <a href="/posts/new"><button class="btn btn-info">New Post</button></a>
-    <% posts.forEach(post => { %>
-        <div class="post">
-            <h1><%= post.title %></h1>
-            <% if(post.images && post.images.length) { %>
-                <img src="<%= post.images[0].url %>" width="100px">
-            <% } %>
-            <p>Price: <%= post.price %></p>
-            <p>Description: <%= post.description %></p>
-            <p>Location: <%= post.location.formattedAddress %></p>
-            <p><a href="/posts/<%= post._id %>">More Info</a></p>
+    <div class="jumbotron">
+        <h1>Posts Index</h1>
+        <a href="/posts/new"><button class="btn btn-info">New Post</button></a>
+    </div>
+    
+    <div class="card-columns">
+    <% posts.docs.forEach(post => { %>
+        <div class="card">
+            <div class="post">
+                <div class="card-title">
+                    <h1><%= post.title %></h1>
+                </div>
+                <div class="card-body">
+                    <div class="card-image-top">
+                        <% if(post.images && post.images.length) { %>
+                            <img src="<%= post.images[0].url %>" width="100px">
+                        <% } %>
+                    </div>
+                    <div class="card-text">
+                        <p>Price: $<%= post.price %></p>
+                    <p>Description: <%= post.description.substring(50) %>...</p>
+                    <p>Location: <%= post.location.formattedAddress %></p>
+                    <p><a href="/posts/<%= post._id %>">More Info</a></p>
+                    </div>
+                </div>
+            </div>
         </div>
     <% }); %>
+    </div>
 </div>

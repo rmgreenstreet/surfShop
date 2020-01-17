@@ -13,6 +13,7 @@ const expressSession = require('express-session');
 const User = require('./models/user');
 const methodOverride = require('method-override');
 const expressSanitizer = require('express-sanitizer');
+const seedPosts = require('./seeds');
 const flash = require('connect-flash');
 // const starability = require('starability');
 const async = require('async');
@@ -129,6 +130,9 @@ app.use(function(err, req, res, next) {
 //   res.status(err.status || 500);
 //   res.render('error');
 });
+
+
+// seedPosts();
 
 let port = process.env.PORT;
 if (port == null || port == "") {

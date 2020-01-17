@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review');
+const mongoosePaginate = require('mongoose-paginate');
 
 const postSchema = new Schema({
   title:String,
@@ -45,5 +46,7 @@ postSchema.pre('remove', async function () {
     }
   });
 });
+
+postSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Post',postSchema);

@@ -5,15 +5,21 @@ async function calculateAverageRating(post) {
     console.log('calculating averate rating')
     console.log('post\'s current average rating is: '+post.averageRating);
     let reviewTotal = 0;
-    for (const review of post.reviews) {
-        let foundReview = await Review.findById(review);
-        console.log('current review\'s rating is: '+foundReview.rating);
-        // let foundReview = await Review.findById(review);
-        reviewTotal += foundReview.rating;
+    if(post.reviews && post.reviews.length) {
+        for (const review of post.reviews) {
+            let foundReview = await Review.findById(review);
+            console.log('current review\'s rating is: '+foundReview.rating);
+            // let foundReview = await Review.findById(review);
+            reviewTotal += foundReview.rating;
+        }
+        //apply average rating to the post
+        console.log('review total is: '+reviewTotal);
+        post.averageRating = (reviewTotal/post.reviews.length);
     }
-    //apply average rating to the post
-    console.log('review total is: '+reviewTotal);
-    post.averageRating = (reviewTotal/post.reviews.length);
+    else {
+        post.averageRating = reviewTotal;
+    }
+    
     console.log('post\'s new average rating is: '+post.averageRating);
     return await post.save();
 }
@@ -68,6 +74,8 @@ module.exports = {
     async reviewDestroy (req,res,next) {
         console.log('deleting review');
         await Post.findByIdAndUpdate(req.params.id,{$pull: {reviews: req.params.review_id}});
+        let post = await Post.findById(req.params.id);
+        calculateAverageRating(post);
         await Review.findByIdAndRemove(req.params.review_id);
         req.session.success='Review Deleted!';
         res.redirect(`/posts/${req.params.id}`);
