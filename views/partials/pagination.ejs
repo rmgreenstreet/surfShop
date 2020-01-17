@@ -1,0 +1,19 @@
+<div class="row mb-2 pagination">
+    <div class="col previousPagination">
+        <% if(posts.page -1) { %>
+            <a href="/posts?page=<%= posts.page -1 %>"><< Prev</a>
+        <% } %>
+    </div>
+    <div class="col text-center pagesPagination">
+        <% for(let i = 1; i <= posts.pages;i++) { %>
+            <a href="/posts?page=<%= i %>"
+                <%= i === posts.page ? 'style=color:#000;' : '' %>
+                ><%= i %></a>
+        <% } %>
+    </div>
+    <div class="col text-right nextPagination">
+        <% if((posts.page +1) <= posts.pages) { %>
+            <a href="/posts?page=<%= posts.page +1 %>">Next >></a>
+        <% } %>
+    </div>
+</div>
