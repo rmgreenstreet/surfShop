@@ -53,6 +53,7 @@ module.exports = {
             page: req.query.page || 1,
             limit: 10
         });
+        posts.page = Number(posts.page);
         console.log(posts.length+' posts found');
         res.render('posts/index',{posts, title: 'SurfShop - All Posts', page:'all_posts' });
     },

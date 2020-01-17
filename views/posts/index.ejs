@@ -4,7 +4,7 @@
         <h1>Posts Index</h1>
         <a href="/posts/new"><button class="btn btn-info">New Post</button></a>
     </div>
-    
+    <% include ../partials/pagination %>
     <div class="card-columns">
     <% posts.docs.forEach(post => { %>
         <div class="card">
@@ -29,4 +29,5 @@
         </div>
     <% }); %>
     </div>
+    <% include ../partials/pagination %>
 </div>
