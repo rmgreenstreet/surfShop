@@ -52,7 +52,8 @@
                 </div>
             </div>
             <div CLASS="card">
-                <div id="map"></div>
+                <div id="map" ></div>
+                
             </div>
         </div>
     </div>
@@ -183,14 +184,26 @@
         </div> 
     </div>
 </div>
-
 <script>
-    var lat = <%= post.location.lat %>;
-    var lng = <%= post.location.lng %>;
-    var contentString = `
-        <strong><%= post.title %><br />
-        <%= post.location.formattedAddress %></strong>
-    `;
+    let post = <%- JSON.stringify(post) %>;
+    mapboxgl.accessToken = 'pk.eyJ1Ijoicm9iZXJ0Z3JlZW5zdHJlZXQiLCJhIjoiY2s1aW5rb3ZsMDBxbDNvbzA2b2xlbmJsbCJ9.Ad9ugJ1_Q7oN_RyWXpuMjQ';
+    
+    var map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/light-v10',
+      center: post.location.coordinates,
+      zoom: 3
+    });
 
+    // create a HTML element for post location
+    var el = document.createElement('div');
+    el.className = 'marker';
+
+    // make a marker for post location and add to the map
+    new mapboxgl.Marker(el)
+        .setLngLat(post.location.coordinates)
+        .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
+        .setHTML('<h3>' + post.title + '</h3><p>' + post.location.formattedAddress + '</p>'))
+        .addTo(map);
+    
 </script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=<%= process.env.GOOGLEMAPS_KEY %>&callback=initMap"></script>

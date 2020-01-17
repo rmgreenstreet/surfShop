@@ -1,11 +1,9 @@
-
+require('dotenv');
 const Post = require('../models/post');
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs');
-const NodeGeocoder = require('node-geocoder');
-const Review = require('../models/review');
-const User = require('../models/user');
-
+const mbxGeocoding = require ('@mapbox/mapbox-sdk/services/geocoding');
+const geocodingClient = mbxGeocoding({accessToken:process.env.MAPBOX_TOKEN});
 
 //configure cloudinary upload settings
 cloudinary.config({
@@ -13,15 +11,6 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
-
-var mapsOptions = {
-    provider: 'google',
-    httpAdapter: 'https',
-    apiKey: process.env.GEOCODING_KEY,
-    formatter: null
-  };
-   
-  var geocoder = NodeGeocoder(mapsOptions);
 
 async function imageUpload(file,documentType) {
     uploadedImage={};
@@ -36,15 +25,6 @@ async function imageDelete(public_id) {
     await cloudinary.uploader.destroy(public_id);
 }
 
-async function getCoordinates(location) {
-    locationObj = {};
-    await geocoder.geocode(location, (err, data) => {
-		locationObj.lat = data[0].latitude;
-		locationObj.lng = data[0].longitude;
-        locationObj.formattedAddress = data[0].formattedAddress;
-    });
-    return locationObj;
-}
 
 module.exports = {
     //posts index
@@ -70,11 +50,8 @@ module.exports = {
             }
         }
         let post = await Post.create(req.body.post);
-        let locationObj = await(getCoordinates(req.body.post.location));
-        post.location.formattedAddress = locationObj.formattedAddress;
-        post.location.lat = locationObj.lat;
-        post.location.lng = locationObj.lng;
-        post.author = req.user._id;
+        await post.getCoordinates(req.body.post.location);
+        post.author=req.user._id;
         post.save();
         req.session.success="Post Created!";
         req.flash('success','Post Created!');
@@ -138,7 +115,7 @@ module.exports = {
         if (post.location.formattedAddress !== req.body.post.location) {
             console.log('location has changed')
             //if so, get new corrdinates and apply to post
-            post.location = await(getCoordinates(req.body.post.location));
+            await post.getCoordinates(req.body.post.location);
         }
 		// save the updated post into the db
 		post.save();

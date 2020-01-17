@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const Review = require('./review');
 const mongoosePaginate = require('mongoose-paginate');
+const mbxGeocoding = require ('@mapbox/mapbox-sdk/services/geocoding');
+const geocodingClient = mbxGeocoding({accessToken:process.env.MAPBOX_TOKEN});
 
 const postSchema = new Schema({
   title:String,
@@ -17,9 +19,8 @@ const postSchema = new Schema({
     }
   ],
   location: {
-    formattedAddress:String,
-    lat:Number,
-    lng:Number
+    formattedAddress: String,
+    coordinates:[]
   },
   author:
     {
@@ -68,6 +69,25 @@ postSchema.methods.calculateAverageRating = function() {
   this.save();
   const floorRating = Math.floor(this.averageRating);
   return floorRating;
+}
+
+postSchema.methods.getCoordinates = async function(location) {
+  try {
+    let locationObj = {};
+    let response = await geocodingClient.forwardGeocode({
+        query:location,
+        limit:1
+    })
+    .send();
+    locationObj.formattedAddress = response.body.features[0].place_name;
+    locationObj.coordinates = response.body.features[0].geometry.coordinates;
+    this.location = locationObj;
+    await this.save();
+  }
+  catch(err) {
+    console.log(err);
+  }
+  return  
 }
 
 postSchema.plugin(mongoosePaginate);

@@ -34,16 +34,12 @@ async function seedPosts() {
             const post = {		
                 title: faker.commerce.productName(),
                 description: faker.lorem.text(),
-                author: {
-                '_id' : '5e1e44d82236de3cecc09df1',
-                'username' : 'robert'
-                },
+                author: '5e1e44d82236de3cecc09df1',
                 price: faker.commerce.price(),
                 // location: await getCoordinates(faker.address.city()+', '+faker.address.stateAbbr())
                 location: {
-                    'lat':faker.address.latitude(),
-                    'lng':faker.address.longitude(),
-                    'formattedAddress':(faker.address.city()+', '+faker.address.stateAbbr())
+                    coordinates:[faker.address.longitude(),faker.address.latitude()],
+                    formattedAddress:faker.address.city()+', '+faker.address.stateAbbr()
                 }
                 ,
                 images: [
