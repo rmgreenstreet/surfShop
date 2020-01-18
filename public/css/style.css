@@ -36,6 +36,7 @@ button {
 
 .mapboxgl-popup {
   max-width: 200px;
+  font-family: 12px/20px 'Helvetica Neue', Arial, sans-serif;
 }
 
 .mapboxgl-popup-content {

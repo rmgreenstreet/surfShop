@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { postRegister, postLogin, getLogout } = require('../controllers');
+const { postRegister, postLogin, getLogout, landingPage } = require('../controllers');
 const { asyncErrorHandler } = require('../middleware');
 const multer = require('multer');
 //configure where/how files are stored in cloudinary
@@ -21,10 +21,8 @@ const imageFilter = (req,file,cb) => {
 //configure multer as upload parameters for cloudinary
 const upload = multer({storage:storage, filefilter:imageFilter});
 
-/* GET home page. */
-router.get('/', (req, res, next) => {
-  res.render('index', { title: 'SurfShop - Home', page:'home' });
-});
+/* GET home/landing page. */
+router.get('/', asyncErrorHandler(landingPage));
 
 /* GET create user page  */
 router.get('/register', (req, res, next) => {

@@ -4,6 +4,7 @@
         <h1>Posts Index</h1>
         <a href="/posts/new"><button class="btn btn-info">New Post</button></a>
     </div>
+    <div class="card"><div id="map"></div></div>
     <% include ../partials/pagination %>
     <div class="card-columns">
     <% posts.docs.forEach(post => { %>
@@ -31,3 +32,9 @@
     </div>
     <% include ../partials/pagination %>
 </div>
+
+<script>
+    mapboxgl.accessToken = '<%= mapBoxToken %>';
+    var posts = {features:<%- JSON.stringify(posts.docs) %>};
+</script>
+<script src = "/js/allPostsClusterMap.js"></script>

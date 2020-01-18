@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Post = require('../models/post');
 const cloudinary = require('cloudinary').v2;
 const passport = require('passport');
 const fs = require('fs');
@@ -20,6 +21,11 @@ async function imageUpload(file,documentType) {
 }
 
 module.exports = {
+    //GET / 
+    async landingPage(req,res,next) {
+        const posts = await Post.find({});
+        res.render('index',{posts,mapBoxToken:process.env.MAPBOX_TOKEN, title: 'SurfShop - Home', page:'home' });
+    },
     // POST to 'Register' page to create new user
     async postRegister (req,res,next) {
         console.log('registering user');

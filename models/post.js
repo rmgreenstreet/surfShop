@@ -18,9 +18,20 @@ const postSchema = new Schema({
       public_id: String,
     }
   ],
-  location: {
-    formattedAddress: String,
-    coordinates:[]
+  location: String,
+  geometry: {
+    type: {
+      type:String,
+      enum:['Point'],
+      required:true
+    },
+    coordinates:{
+      type:[Number],
+      required:true
+    }
+  },
+  properties: {
+    description:String
   },
   author:
     {

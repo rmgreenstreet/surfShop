@@ -1,6 +1,7 @@
 const faker = require('faker');
 const Post = require('./models/post');
 const NodeGeocoder = require('node-geocoder');
+const cities = require('./cities');
 
 
 var mapsOptions = {
@@ -24,35 +25,29 @@ async function getCoordinates(location) {
 }
 
 async function seedPosts() {
-    await Post.remove({});
-    let postsToCreate = [];
-    for (var i = 1;i < 41;i++) {
-        postsToCreate.push(i);
-    }
-    for(const i of postsToCreate) {
-        console.log('creating new post '+i);
-            const post = {		
-                title: faker.commerce.productName(),
-                description: faker.lorem.text(),
-                author: '5e1e44d82236de3cecc09df1',
-                price: faker.commerce.price(),
-                // location: await getCoordinates(faker.address.city()+', '+faker.address.stateAbbr())
-                location: {
-                    coordinates:[faker.address.longitude(),faker.address.latitude()],
-                    formattedAddress:faker.address.city()+', '+faker.address.stateAbbr()
-                }
-                ,
-                images: [
-                    {
-                        url: await faker.image.imageUrl(),
-                        public_id:'12345'
-                    }
-                ]
-            }
-            console.log(post);
-            await Post.create(post);
-    }
-    console.log('40 new posts created');
+	await Post.remove({});
+	for(const i of new Array(600)) {
+		const random1000 = Math.floor(Math.random() * 1000);
+		const title = faker.lorem.word();
+		const description = faker.lorem.text();
+		const postData = {
+			title,
+			description,
+			location: `${cities[random1000].city}, ${cities[random1000].state}`,
+			geometry: {
+				type: 'Point',
+				coordinates: [cities[random1000].longitude, cities[random1000].latitude],
+			},
+			author: {
+		    '_id' : '5bb27cd1f986d278582aa58c',
+		    'username' : 'ian'
+		  }
+		}
+		let post = new Post(postData);
+		post.properties.description = `<strong><a href="/posts/${post._id}">${title}</a></strong><p>${post.location}</p><p>${description.substring(0, 20)}...</p>`;
+		post.save();
+	}
+	console.log('600 new posts created');
 }
 
 module.exports = seedPosts;

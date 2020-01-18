@@ -35,7 +35,7 @@ module.exports = {
         });
         posts.page = Number(posts.page);
         console.log(posts.length+' posts found');
-        res.render('posts/index',{posts, title: 'SurfShop - All Posts', page:'all_posts' });
+        res.render('posts/index',{posts, mapBoxToken:process.env.MAPBOX_TOKEN, title: 'SurfShop - All Posts', page:'all_posts' });
     },
     //new post page
     postNew(req,res,next) {

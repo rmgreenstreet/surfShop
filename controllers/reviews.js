@@ -22,6 +22,7 @@ module.exports = {
         //push the review into the post
         await post.reviews.push(review._id);
         //save the post with the new review
+        post.calculateAverageRating();
         post.save();
         req.session.success="Review Created!";
 		res.redirect('/posts/'+post.id);
