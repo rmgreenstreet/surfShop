@@ -1,5 +1,4 @@
 require('dotenv').config({ path: '.env' });
-const bodyParser = require('body-parser');
 const createError = require('http-errors');
 const express = require('express');
 const engine = require('ejs-mate');
@@ -28,8 +27,8 @@ const app = express();
 mongoose.connect(process.env.DATABASE_URL,{
 	useNewUrlParser:true, 
 	useUnifiedTopology:true,
-  useFindAndModify: false,
-  useCreateIndex:true
+  	useFindAndModify: false,
+  	useCreateIndex:true
 }).then(() => {
 	console.log('Connected to Mongoose DB')
 }).catch(err => {
@@ -47,7 +46,6 @@ app.set('view engine', 'ejs');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, './public')));
 

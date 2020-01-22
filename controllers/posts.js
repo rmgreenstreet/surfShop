@@ -52,7 +52,7 @@ module.exports = {
         res.render('posts/show',{post, mapBoxToken, floorRating, title: 'SurfShop - View '+post.title, page:'view_post' });
     },
     //edit post
-    async postEdit (req,res,next) {
+    postEdit (req,res,next) {
         res.render('posts/edit',{ title: 'SurfShop - Edit '+post.title, page:'edit_post' });
     },
     // Posts Update
