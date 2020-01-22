@@ -38,6 +38,9 @@ module.exports = {
             req.session.error = 'You are already logged in'
             return res.redirect('/');
         }
+        if(req.query.returnTo) {
+            req.session.redirectTo = req.headers.referer;
+        }
 		res.render('login', { title: 'Login' , page:'login'});
 	},
 	// POST /login
