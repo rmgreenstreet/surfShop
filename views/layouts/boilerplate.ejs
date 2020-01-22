@@ -23,10 +23,15 @@
 		<!-- modernizr scripts -->
 		<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js" integrity="sha256-0rguYS0qgS6L4qVzANq4kjxPLtvnp5nn2nB5G1lWRv4=" crossorigin="anonymous"></script> -->
 		<!-- mapbox styles and scripts -->
-		<link href='https://api.mapbox.com/mapbox-gl-js/v1.4.1/mapbox-gl.css' rel='stylesheet' />
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.js'></script>
 		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css' rel='stylesheet' />
+		<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.min.js"></script>
+		<link
+		rel="stylesheet"
+		href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.2/mapbox-gl-geocoder.css"
+		type="text/css"
+		/>
 		<!-- starability raating css -->
 		<link rel="stylesheet" type="text/css" href="/css/starability-basic.min.css"/>
     </head>
@@ -45,8 +50,8 @@
 					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register" id="signup_button">Sign Up</a>
 				<% } else { %>
 					<a class="nav-item nav-link" href="/profile/<%= currentUser._id %>">Signed In As <%= currentUser.username %></a>
-					<a class="nav-item nav-link" href="/logout" id="signup_button">Log Out</a>
-					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'new' ? 'active' : '' %>" href="/posts/new" id="new_post">New Post</a>
+					<a class="nav-item nav-link" href="/logout" id="logout">Log Out</a>
+					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'new_post' ? 'active' : '' %>" href="/posts/new" id="new_post">New Post</a>
 				<% }; %>
 			<form name="searchCampgrounds" action="/campgrounds" method="get" class="form-inline">
 				<div class="input-group">

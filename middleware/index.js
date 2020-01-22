@@ -1,4 +1,6 @@
 const Review = require('../models/review');
+const User = require('../models/user');
+const Post = require('../models/post');
 
 module.exports = {
 	asyncErrorHandler: (fn) =>
@@ -13,5 +15,20 @@ module.exports = {
 		}
 		req.session.error = "This review does not belong to you."
 		return res.redirect(`/posts/${req.params.id}`);
+	},
+	isLoggedIn: (req,res,next) => {
+		if(req.isAuthenticated()) return next();
+		req.session.error = 'You need to be logged in to do that!';
+		req.session.redirectTo = req.originalUrl;
+		res.redirect('/login');
+	},
+	isPostAuthor: async (req,res,next) => {
+		const post = await Post.findById(req.params.id);
+		if(post.author.equals(req.user._id)){
+			res.locals.post=post;
+			return next();
+		}
+		req.session.error='Access Denied!'
+		res.redirect('back')
 	}
 }

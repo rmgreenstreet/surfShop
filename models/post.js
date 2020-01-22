@@ -23,7 +23,7 @@ const postSchema = new Schema({
     type: {
       type:String,
       enum:['Point'],
-      required:true
+      required:false
     },
     coordinates:{
       type:[Number],
@@ -84,15 +84,14 @@ postSchema.methods.calculateAverageRating = function() {
 
 postSchema.methods.getCoordinates = async function(location) {
   try {
-    let locationObj = {};
     let response = await geocodingClient.forwardGeocode({
         query:location,
         limit:1
     })
     .send();
-    locationObj.formattedAddress = response.body.features[0].place_name;
-    locationObj.coordinates = response.body.features[0].geometry.coordinates;
-    this.location = locationObj;
+    this.geometry = response.body.features[0].geometry;
+    this.location = response.body.features[0].place_name;
+    console.log(this.geometry);
     await this.save();
   }
   catch(err) {

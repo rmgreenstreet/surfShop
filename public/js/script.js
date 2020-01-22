@@ -53,7 +53,7 @@ $('.toggle-review-edit-form').on('click', function() {
     $(this).parent().siblings('.edit-review-form').toggle(500);
 });
 
-//add map with center on post coordinates with a marker icon
+// add map with center on post coordinates with a marker icon
 // async function createMap() {
 //     let post = <%- JSON.stringify(post) %>;
 //     mapboxgl.accessToken = process.env.MAPBOX_TOKEN;
@@ -61,7 +61,7 @@ $('.toggle-review-edit-form').on('click', function() {
 //     var map = new mapboxgl.Map({
 //         container: 'map',
 //         style: 'mapbox://styles/mapbox/light-v10',
-//         center: post.location.coordinates,
+//         center: post.geometry.coordinates,
 //         zoom: 3
 //     });
 
@@ -71,9 +71,9 @@ $('.toggle-review-edit-form').on('click', function() {
 
 //     // make a marker for post location and add to the map
 //     new mapboxgl.Marker(el)
-//         .setLngLat(post.location.coordinates)
+//         .setLngLat(post.geometry.coordinates)
 //         .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-//         .setHTML('<h3>' + post.title + '</h3><p>' + post.location.formattedAddress + '</p>'))
+//         .setHTML('<h3>' + post.title + '</h3><p>' + post.location + '</p>'))
 //         .addTo(map);        
 // }
 

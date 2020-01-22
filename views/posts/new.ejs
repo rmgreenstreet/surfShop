@@ -3,23 +3,23 @@
     <h1>Create New Post</h1>
     <form action="/posts" method="post" enctype="multipart/form-data">
         <div class="form-group">
-            <label for="post[title]">Title</label>
+            <label for="post[title]" class="d-none">Title</label>
             <input type="text" name="post[title]" placeholder="Post Title">
         </div>
         <div class="form-group">
-            <label for="post[price]">Price</label>
+            <label for="post[price]" class="d-none">Price</label>
             <input type="number" step=".01" name="post[price]" placeholder="Post Price">
         </div>
-        <div class="form-group">
-            <label for="post[description">Description</label>
+        <div class="form-group" class="d-none">
+            <label for="post[description]" class="d-none">Description</label>
             <textarea name="post[description]" placeholder="Post Description"></textarea>
         </div>
         <div class="form-group">
-            <label for="post[location">Location</label>
+            <label for="post[location]" class="d-none">Location</label>
             <input type="text" name="post[location]" placeholder="Post Location">
         </div>
         <div class="form-group">
-            <label for="image">Images</label>
+            <label for="image" class="d-block">Images</label>
             <input type="file" name="image" multiple="multiple" accept="images/*">
         </div>
         <p>Select up to 4 images (jpg,jpeg,png,gif)</p>

@@ -1,17 +1,6 @@
 const faker = require('faker');
 const Post = require('./models/post');
-const NodeGeocoder = require('node-geocoder');
 const cities = require('./cities');
-
-
-var mapsOptions = {
-    provider: 'google',
-    httpAdapter: 'https',
-    apiKey: process.env.GEOCODING_KEY,
-    formatter: null
-  };
-   
-  var geocoder = NodeGeocoder(mapsOptions);
 
   
 async function getCoordinates(location) {
@@ -26,22 +15,22 @@ async function getCoordinates(location) {
 
 async function seedPosts() {
 	await Post.remove({});
+	console.log('all posts removed');
 	for(const i of new Array(600)) {
 		const random1000 = Math.floor(Math.random() * 1000);
-		const title = faker.lorem.word();
+		const title = faker.commerce.productName();
 		const description = faker.lorem.text();
+		const price = faker.commerce.price();
 		const postData = {
 			title,
 			description,
+			price,
 			location: `${cities[random1000].city}, ${cities[random1000].state}`,
 			geometry: {
 				type: 'Point',
 				coordinates: [cities[random1000].longitude, cities[random1000].latitude],
 			},
-			author: {
-		    '_id' : '5bb27cd1f986d278582aa58c',
-		    'username' : 'ian'
-		  }
+			author:  '5e1e44d82236de3cecc09df1',
 		}
 		let post = new Post(postData);
 		post.properties.description = `<strong><a href="/posts/${post._id}">${title}</a></strong><p>${post.location}</p><p>${description.substring(0, 20)}...</p>`;

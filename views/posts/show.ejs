@@ -32,9 +32,9 @@
             </div>
             
             <div class="card-text">
-                <p>Price: <%= post.price %></p>
+                <p>Price: $<%= post.price %></p>
                 <p>Description: <%= post.description %></p>
-                <p>Location: <%= post.location.formattedAddress %></p>
+                <p>Location: <%= post.location %></p>
                 <div class="averageStars mb-2">
                     <% for(let i = 0;i<5;i++) { %>
                         <% if(i < floorRating) { %>
@@ -169,17 +169,19 @@
     <div id="post-edit-buttons" class="row m-1">
         <div class="col">
             <div class="row justify-content-start">
-                <% if(post.author.equals(currentUser._id)) { %>
-                        <a href="/posts/<%= post._id %>/edit">
-                            <button class="btn btn-warning m-1">Edit Post</button>
-                        </a>
-                        <form action="/posts/<%= post.id %>?_method=DELETE" method="post">
-                            <button type="submit" class="btn btn-danger m-1 deleteButton deletePost">Delete Post</button>
-                        </form>
+                <% if(currentUser) { %>
+                        <% if(post.author.equals(currentUser._id)) { %>
+                            <a href="/posts/<%= post._id %>/edit">
+                                <button class="btn btn-warning m-1">Edit Post</button>
+                            </a>
+                            <form action="/posts/<%= post.id %>?_method=DELETE" method="post">
+                                <button type="submit" class="btn btn-danger m-1 deleteButton deletePost">Delete Post</button>
+                            </form>
+                    <% } %>
                 <% } %>
-                    <a href="/posts">
-                        <button class="btn btn-info m-1">Back To Posts</button>
-                    </a>
+                <a href="/posts">
+                    <button class="btn btn-info m-1">Back To Posts</button>
+                </a>
             </div>     
         </div> 
     </div>
@@ -191,7 +193,7 @@
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v10',
-      center: post.location.coordinates,
+      center: post.geometry.coordinates,
       zoom: 3
     });
 
@@ -201,9 +203,9 @@
 
     // make a marker for post location and add to the map
     new mapboxgl.Marker(el)
-        .setLngLat(post.location.coordinates)
+        .setLngLat(post.geometry.coordinates)
         .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
-        .setHTML('<h3>' + post.title + '</h3><p>' + post.location.formattedAddress + '</p>'))
+        .setHTML('<h3>' + post.title + '</h3><p>' + post.location + '</p>'))
         .addTo(map);
     
 </script>

@@ -9,6 +9,7 @@ const logger = require('morgan');
 const mongoose = require('mongoose');
 const serveFavicon = require('serve-favicon');
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 const expressSession = require('express-session');
 const User = require('./models/user');
 const methodOverride = require('method-override');
@@ -49,17 +50,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, './public')));
-console.log(path.resolve(__dirname, './public'))
 
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(expressSession({
 		secret:"surfs up brah",
 		resave:false,
 		saveUninitialized:false
 		}));
+app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 app.use(function(req, res, next){
@@ -69,24 +68,21 @@ app.use(function(req, res, next){
 	next();
 });
 
-//configure passport and sessions
-
 // CHANGE: USE "createStrategy" INSTEAD OF "authenticate"
 passport.use(User.createStrategy());
+
+// use static authenticate method of model in LocalStrategy
+passport.use(new LocalStrategy(User.authenticate()));
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 //set local variables middleware
 app.use(function (req,res,next) {
-	req.user={
-		// '_id': '5e1e44d82236de3cecc09df1',
-		// 'username':'robert'
-		// '_id': '5e209d44c963352d4c6f27a5',
-		// 'username':'robert2'
-		'_id': '5e21fd83c1fadc3a8869dfa6',
-		'username':'robert3'
-	};
+	req.user - {
+		'_id':'5e1e44d82236de3cecc09df1',
+		'username':'robert'
+	}
 	res.locals.currentUser = req.user;
 	//set default page title if one is not specified
 	res.locals.title='Surf Shop';
@@ -94,7 +90,7 @@ app.use(function (req,res,next) {
 	res.locals.success = req.session.success || "";
 	//delete flash message after sending it to the page so it doesn't show again
 	delete req.session.success;
-	//set success flash message
+	//set error flash message
 	res.locals.error = req.session.error || "";
 	//delete flash message after sending it to the page so it doesn't show again
 	delete req.session.error;

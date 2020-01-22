@@ -2,24 +2,9 @@ require('dotenv').config({ path: '.env' });
 const express = require('express');
 const router = express.Router({mergeParams:true});
 const multer = require('multer');
-//configure where/how files are stored in cloudinary
-const storage = multer.diskStorage({
-    filename: function(req,file,callback) {
-        callback(null,Date.now() + file.originalname);
-    }
-});
-//only accept image files for cloudinary
-const imageFilter = (req,file,cb) => {
-    if (!file.originalname.match(/\.jpg|jpeg|png|gif)$/i)) {
-        return cb(new Error('Only image files (jpg, jpeg, png, gif) are allowed!'), false);
-    }
-    else {
-        cb(null,true);
-    }
-};
-//configure multer as upload parameters for cloudinary
-const upload = multer({storage:storage, filefilter:imageFilter});
-const { asyncErrorHandler } = require('../middleware');
+const { cloudinary, storage } = require('../cloudinary');
+const upload = multer({ storage })
+const { asyncErrorHandler, isLoggedIn, isPostAuthor } = require('../middleware');
 const { 
     postIndex, 
     postNew, 
@@ -35,21 +20,21 @@ const {
 router.get('/',asyncErrorHandler(postIndex));
 
 /* GET create post page  */
-router.get('/new', postNew);
+router.get('/new', isLoggedIn, postNew);
 
 /* POST new post  */
-router.post('/', upload.array('image', 4) ,asyncErrorHandler(postCreate));
+router.post('/', isLoggedIn, upload.array('image', 4) ,asyncErrorHandler(postCreate));
 
 /* GET show page  */
 router.get('/:id', asyncErrorHandler(postShow));
 
 /* GET posts edit page  */
-router.get('/:id/edit' , asyncErrorHandler(postEdit));
+router.get('/:id/edit' , isPostAuthor, asyncErrorHandler(postEdit));
 
 /* PUT posts update  */
-router.put('/:id', upload.array('image', 4), asyncErrorHandler(postUpdate));
+router.put('/:id', isPostAuthor, upload.array('image', 4), asyncErrorHandler(postUpdate));
 
 /* POST delete post  */
-router.delete('/:id/', asyncErrorHandler(postDestroy));
+router.delete('/:id/', isPostAuthor, asyncErrorHandler(postDestroy));
 
 module.exports = router;
