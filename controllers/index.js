@@ -34,7 +34,11 @@ module.exports = {
 	},
 	// GET /login
 	getLogin(req, res, next) {
-		res.render('login', { title: 'Login' });
+        if(req.isAuthenticated()) {
+            req.session.error = 'You are already logged in'
+            return res.redirect('/');
+        }
+		res.render('login', { title: 'Login' , page:'login'});
 	},
 	// POST /login
 	async postLogin(req, res, next) {

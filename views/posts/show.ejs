@@ -188,8 +188,7 @@
 </div>
 <script>
     let post = <%- JSON.stringify(post) %>;
-    mapboxgl.accessToken = 'pk.eyJ1Ijoicm9iZXJ0Z3JlZW5zdHJlZXQiLCJhIjoiY2s1aW5rb3ZsMDBxbDNvbzA2b2xlbmJsbCJ9.Ad9ugJ1_Q7oN_RyWXpuMjQ';
-    
+    mapboxgl.accessToken = '<%= mapBoxToken %>';
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v10',
@@ -207,5 +206,4 @@
         .setPopup(new mapboxgl.Popup({ offset: 25 }) // add popups
         .setHTML('<h3>' + post.title + '</h3><p>' + post.location + '</p>'))
         .addTo(map);
-    
 </script>
