@@ -29,12 +29,12 @@ router.post('/', isLoggedIn, upload.array('image', 4) ,asyncErrorHandler(postCre
 router.get('/:id', asyncErrorHandler(postShow));
 
 /* GET posts edit page  */
-router.get('/:id/edit' , isPostAuthor, asyncErrorHandler(postEdit));
+router.get('/:id/edit' ,isLoggedIn, isPostAuthor, asyncErrorHandler(postEdit));
 
 /* PUT posts update  */
-router.put('/:id', isPostAuthor, upload.array('image', 4), asyncErrorHandler(postUpdate));
+router.put('/:id', isLoggedIn, isPostAuthor, upload.array('image', 4), asyncErrorHandler(postUpdate));
 
 /* POST delete post  */
-router.delete('/:id/', isPostAuthor, asyncErrorHandler(postDestroy));
+router.delete('/:id/', isLoggedIn, isPostAuthor, asyncErrorHandler(postDestroy));
 
 module.exports = router;
