@@ -65,7 +65,7 @@
             <% post.reviews.forEach((review) => { %>
                 <div class="review">
                     <p><%= review.body %> - <%= review.rating %> Stars<%= (review.author.username ? ' - '+review.author.username : ' - Anonymous') %></p>
-                    <% if(review.author.equals(currentUser._id)) { %>
+                    <% if(currentUser && review.author.equals(currentUser._id)) { %>
                         <div class="showEditControls mt-2">
                             <div class="row justify-content-start">
                                 <button class="btn btn-sm btn-warning toggle-review-edit-form m-1">Edit</button>
