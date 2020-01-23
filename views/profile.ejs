@@ -4,7 +4,7 @@
     <div class="row" id="full-profile">
         <div class="col-4">
             <div class="card">
-                <img src="<%= currentUser.image.url %>" class="card-img-top" alt="<%= currentUser.username %>'s profile'"></a>
+                <img src="<%= currentUser.image.url %>" class="card-img-top profile-image" alt="<%= currentUser.username %>'s profile'"></a>
             </div>
             <div class="card-header">
                 <div class="card-title mb-n2">
@@ -47,7 +47,7 @@
                         <% }) %>
                         <a href="">See All Posts</a>
                     <% } else { %>
-                        <div><p>This user has not created any posts</p></div>
+                        <div><p>You have not created any posts</p></div>
                     <% } %>
                 </div>
             </div>
@@ -57,7 +57,7 @@
         <div class="col-12">
             <div id="profile-edit">
                 <h5>Update Profile:</h5>
-                <form class="" action="/profile?_method=PUT" method="POST">
+                <form class="" action="/profile?_method=PUT" method="POST" enctype="multipart/form-data">
                     <div class="input-group input-group-sm mb-3">
                         <div class="input-group-prepend">
                           <span class="input-group-text" id="username-label">Username</span>
@@ -96,6 +96,7 @@
                         <input type="email" name="email" id="email" class="form-control" aria-label="email-label" aria-describedby="email-label" value="<%= currentUser.email %>" required>
                         <label for="email" class="d-none">Email Address:</label>
                     </div>
+                    <small>(deletes existing image)</small>
                     <label class="btn btn-secondary mb-3 w-100">
                         Choose New Profile Picture <input type="file" name="image" id="image" hidden>
                     </label>

@@ -2,7 +2,7 @@ require('dotenv').config({ path: '.env' });
 const express = require('express');
 const router = express.Router({mergeParams:true});
 const multer = require('multer');
-const { cloudinary, storage } = require('../cloudinary');
+const { storage } = require('../cloudinary');
 const upload = multer({ storage })
 const { asyncErrorHandler, isLoggedIn, isPostAuthor } = require('../middleware');
 const { 
