@@ -1,26 +1,112 @@
 <%- layout('layouts/boilerplate') %>
 <div class="container">
     <h1><%= currentUser.username %>'s Profile</h1>
-    <div class="card">
-        <div class="card-header">
-            <div class="card-title">
-                <h2>Recent Posts:</h2>
+    <div class="row" id="full-profile">
+        <div class="col-4">
+            <div class="card">
+                <img src="<%= currentUser.image.url %>" class="card-img-top" alt="<%= currentUser.username %>'s profile'"></a>
             </div>
-        </div>
-        <div class="card-body">
-            <% posts.forEach(function(post) { %>
-                <div class="post">
-                    <a href="posts/<%= post.id %>">
-                        <h3>
-                        <%= post.title %>
-                        </h3>   
-                    </a>
+            <div class="card-header">
+                <div class="card-title mb-n2">
+                    <h3>Account Actions</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="card-text">
                     <p>
-                        <%= post.description.subString(0,50) %>...
-                        <a href="posts/<%= post.id %>">Read More</a>
+                        <a href="">Edit Profile</a>
+                    </p>
+                    <p>
+                        <a href="">Reset Password</a>
                     </p>
                 </div>
-            <% }) %>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <h2>Recent Posts:</h2>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <% if(posts.length) { %> 
+                        <% posts.forEach(function(post) { %>
+                            <div class="post">
+                                <a href="posts/<%= post.id %>">
+                                    <h3>
+                                    <%= post.title %>
+                                    </h3>   
+                                </a>
+                                <p>
+                                    <%= post.description.subString(0,50) %>...
+                                    <a href="posts/<%= post.id %>">Read More</a>
+                                </p>
+                                <hr>
+                            </div>
+                        <% }) %>
+                        <a href="">See All Posts</a>
+                    <% } else { %>
+                        <div><p>This user has not created any posts</p></div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div id="profile-edit">
+                <h5>Update Profile:</h5>
+                <form class="" action="/profile?_method=PUT" method="POST" id="update-profile">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="username-label">Username</span>
+                        </div>
+                        <input type="text" name="username" id="username" class="form-control" aria-label="username" aria-describedby="username-label" value="<%= currentUser.username %>" autofocus required>
+                        <label for="username" class="d-none">Username</label>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="current-password-label">Current Password</span>
+                        </div>
+                        <input type="password" name="currentPassword" id="current-password" class="form-control" aria-label="current-password" aria-describedby="current-password-label">
+                        <label for="current-password" class="d-none">Current Password</label>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="new-password-label">New Password</span>
+                        </div>
+                        <input type="password" name="newPassword" id="new-password" class="form-control" aria-label="new-password" aria-describedby="new-password-label" placeholder="New Password">
+                        <label for="new-password" class="d-none">New Password:</label>
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="password-confirmation-label">Confirm New Password</span>
+                        </div>
+                        <input type="password" name="passwordConfirmation" id="password-confirmation" class="form-control" aria-label="password-confirmation" aria-describedby="password-confirmation-label" placeholder="Confirm New Password">
+                        <label for="password-confirmation" class="d-none">Confirm New Password:</label>
+                    </div>
+                    <div id="validation-message" class="alert mb3 d-none">
+                        
+                    </div>
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="email-label">Email</span>
+                        </div>
+                        <input type="email" name="email" id="email" class="form-control" aria-label="email-label" aria-describedby="email-label" value="<%= currentUser.email %>" required>
+                        <label for="email" class="d-none">Email Address:</label>
+                    </div>
+                    <label class="btn btn-secondary mb-3 w-100">
+                        Choose New Profile Picture <input type="file" name="image" id="image" hidden>
+                    </label>
+                        <label class="d-none" for="image">Profile Image</label>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+<script>
+
+</script>
+<script src="js/profile.js"></script>

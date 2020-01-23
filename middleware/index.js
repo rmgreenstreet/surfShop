@@ -30,5 +30,40 @@ module.exports = {
 		}
 		req.session.error='Access Denied!'
 		res.redirect('back')
+	},
+	isValidPassword: async (req,res,next) => {
+		const { user } = await User.authenticate()(req.user.username, req.body.currentPassword);
+		if(user){
+			console.log('found user');
+			//add user to res.locals
+			res.locals.user = user
+			next();
+		}
+		else {
+			console.log('no user found');
+			req.session.error = "Incorrect current password!";
+			return res.redirect('/profile');
+		}
+	},
+	changePassword: async (req,res,next) => {
+		const {
+			newPassword,
+			passwordConfirmation,
+		} = req.body;
+		if(newPassword && passwordConfirmation) {
+			console.log('user wants to change password')
+			const { user } = res.locals;
+			if(newPassword === passwordConfirmation) {
+				console.log('passwords match');
+				await user.setPassword(newPassword);
+				next();
+			} else {
+				console.log('passwords do not match');
+				req.session.error = "New passwords do not match!"
+				return res.redirect('/profile');
+			}
+		} else {
+			next();
+		}
 	}
 }
