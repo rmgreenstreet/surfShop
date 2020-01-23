@@ -1,6 +1,6 @@
 let newPasswordValue;
 let confirmationValue;
-const profileEditForm = document.getElementById('update-profile');
+const submitBtn = document.getElementById('update-profile');
 const newPassword = document.getElementById('new-password');
 const confirmPassword = document.getElementById('password-confirmation');
 const validationMessage = document.getElementById('validation-message');
@@ -21,25 +21,11 @@ confirmPassword.addEventListener('input', e => {
     }
     else if(newPasswordValue !== confirmationValue) {
         validatePasswords('New passwords must match!','alert-danger','alert-success');
+        submitBtn.setAttribute('disabled',true);
     }
     else {
         validatePasswords('New passwords match!','alert-success','alert-danger');
+        submitBtn.removeAttribute('disabled');
     }
 });
-
-profileEditForm.addEventListener('submit', e => {
-    if(newPasswordValue !== confirmationValue) {
-        e.preventDefault();
-        const error = document.getElementById('error');
-        if(!error) {
-            const flashError = document.createElement('div');
-            flashError.classList.add('alert');
-            flashError.classList.add('alert-danger');
-            flashError.setAttribute('id','error');
-            flashError.textContent='New passwords must match!';
-            const fullProfile = document.getElementById('full-profile');
-            fullProfile.parentNode.insertBefore(flashError,fullProfile.nextSibling);
-        }
-    }
-})
 
