@@ -1,0 +1,30 @@
+<% layout('layouts/boilerplate') -%>
+<div class="container">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <h1>Reset Password</h1>
+            <form action="/reset/<%= token %>?method=PUT" method="POST">
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="password-label">New Password</span>
+                    </div>
+                    <input type="password" name="password" id="password" class="form-control" aria-label="new-password" aria-describedby="new-password-label" placeholder="New Password">
+                    <label for="new-password" class="d-none">New Password:</label>
+                </div>
+                <div class="input-group input-group-sm mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="confirm-label">Confirm New Password</span>
+                    </div>
+                    <input type="password" name="confirm" id="confirm" class="form-control" aria-label="confirm" aria-describedby="confirm-label" placeholder="Confirm New Password">
+                    <label for="confirm" class="d-none">Confirm New Password:</label>
+                </div>
+                <div id="validation-message" class="alert mb3 d-none">
+                    
+                </div>
+                <button type="submit" class="btn btn-secondary">Reset Password</button>
+            </form>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
