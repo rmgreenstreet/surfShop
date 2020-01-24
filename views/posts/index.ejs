@@ -21,7 +21,7 @@
                     </div>
                     <div class="card-text">
                         <p>Price: $<%= post.price %></p>
-                    <p>Description: <%= post.description.substring(0,50) %>...</p>
+                    <p>Description: <%= (post.description.length < 50 ? post.description : post.description.substring(0,50)+'...')%></p>
                     <p>Location: <%= post.location %></p>
                     <p><a href="/posts/<%= post._id %>">More Info</a></p>
                     </div>
