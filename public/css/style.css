@@ -44,6 +44,15 @@ button {
   font-family: 'Open Sans', sans-serif;
 }
 
-/* #postImages {
-  max-height:200px;
-} */
+.carousel {
+  height:25rem;
+}
+
+.carousel, .carousel-inner, .carousel-item {
+  max-height:100% !important;
+}
+
+.carousel-image {
+  max-height:25rem;
+  object-fit:contain !important;
+}

@@ -30,10 +30,12 @@ mongoose.connect(process.env.DATABASE_URL,{
   	useFindAndModify: false,
   	useCreateIndex:true
 }).then(() => {
-	console.log('Connected to Mongoose DB')
+	console.log('Connected to Mongo DB')
 }).catch(err => {
 	console.log('error: ',err.message)
 });
+
+
 
 console.log("Environment database URL: "+process.env.DATABASE_URL);
 

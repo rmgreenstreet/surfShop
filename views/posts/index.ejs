@@ -4,33 +4,43 @@
         <h1>Posts Index</h1>
         <a href="/posts/new"><button class="btn btn-info">New Post</button></a>
     </div>
-    <div class="card"><div id="map"></div></div>
-    <% include ../partials/pagination %>
-    <div class="card-columns">
-    <% posts.docs.forEach(post => { %>
-        <div class="card">
-            <div class="post">
-                <div class="card-img-top">
-                    <% if(post.images && post.images.length) { %>
-                        <img src="<%= post.images[0].url %>" width="100px">
-                    <% } %>
-                </div>
-                <div class="card-body">
-                    <div class="card-title">
-                        <h1><%= post.title %></h1>
-                    </div>
-                    <div class="card-text">
-                        <p>Price: $<%= post.price %></p>
-                    <p>Description: <%= (post.description.length < 50 ? post.description : post.description.substring(0,50)+'...')%></p>
-                    <p>Location: <%= post.location %></p>
-                    <p><a href="/posts/<%= post._id %>">More Info</a></p>
-                    </div>
-                </div>
-            </div>
+    <div class="row">
+        <div class="col-md-4">
+            <% include ../partials/searchFilter %>
         </div>
-    <% }); %>
+        <div class="col-md-8">
+            <div class="card"><div id="map"></div></div>
+        </div>
     </div>
-    <% include ../partials/pagination %>
+    <div class="row">
+        <% include ../partials/pagination %>
+            <div class="card-columns">
+            <% posts.docs.forEach(post => { %>
+                <div class="card">
+                    <div class="post">
+                        <div class="card-img-top text-center">
+                            <% if(post.images && post.images.length) { %>
+                                <img src="<%= post.images[0].url %>" class="w-100">
+                            <% } %>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-title">
+                                <h1><%= post.title %></h1>
+                            </div>
+                            <div class="card-text">
+                                <p>Price: $<%= post.price %></p>
+                            <p>Description: <%= (post.description.length < 50 ? post.description : post.description.substring(0,50)+'...')%></p>
+                            <p>Location: <%= post.location %></p>
+                            <p><a href="/posts/<%= post._id %>">More Info</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+            </div>
+            <% include ../partials/pagination %>
+    </div>
+    
 </div>
 
 <script>

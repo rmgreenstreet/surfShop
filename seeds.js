@@ -1,7 +1,57 @@
 const faker = require('faker');
 const Post = require('./models/post');
+const Review = require('./models/review');
+const User = require('./models/user');
 const cities = require('./cities');
+const fs = require('fs');
+const path = require('path');
 
+const seedImages = 'public/img/seed';
+let imageArray = [];
+
+fs.readdir(seedImages, (err, files) => {
+	if(err) {
+		return console.error('could not read the source directory: ',err);
+	}
+	files.forEach(file => {
+		console.log(file);
+		imageArray.push('img/seed/'+file);
+	});
+	console.log('imageArray populated with '+imageArray.length+' images');
+});
+
+async function generateUsers() {
+
+	console.log('creating 50 users');
+	await User.deleteMany({username:!'robert'});
+	console.log('all current users deleted');
+	for (let i = 0;i < 50;i++) {
+		await User.register({username:faker.name.firstName(),email:faker.internet.email()},faker.internet.password());
+		console.log(`user ${i+1} registered`);
+	}
+	console.log('50 users registered');
+	// await User.register ({username:'robert',email:'rgreenstreetdev@gmail.com'},'password');
+	// console.log('user \'robert\' registered');
+};
+
+async function generateReviews(post, users) {
+	const randomReviewCount = Math.floor(Math.random() * 6);
+	console.log(`creating ${randomReviewCount} reviews for ${post.title}`);
+	for(let i = 0;i < randomReviewCount;i++){
+		console.log(`creating review # ${i+1} for post '${post.title}'`);
+		const randomRating = Math.floor(Math.random() *6);
+		const randomUserIndex = Math.floor(Math.random() *users.length);
+		let reviewData = {
+			body:faker.lorem.paragraph(),
+			rating:randomRating,
+			author:users[randomUserIndex]._id
+		}
+		const newReview = await Review.create(reviewData);
+		console.log(`review # ${i+0} added to post`)
+		post.reviews.push(newReview);
+	}
+	await post.save();
+};
   
 async function getCoordinates(location) {
     locationObj = {};
@@ -14,10 +64,15 @@ async function getCoordinates(location) {
 }
 
 async function seedPosts() {
-	await Post.remove({});
+	await generateUsers();
+	const allUsers = await User.find({});
+	const numberOfPosts = Math.floor(Math.random()*500);
+	console.log(`creating ${numberOfPosts} posts`);
+	await Post.deleteMany({});
 	console.log('all posts removed');
-	for(const i of new Array(600)) {
+	for(const i of new Array(numberOfPosts)) {
 		const random1000 = Math.floor(Math.random() * 1000);
+		const randomUserIndex = Math.floor(Math.random() * allUsers.length);
 		const title = faker.commerce.productName();
 		const description = faker.lorem.text();
 		const price = faker.commerce.price();
@@ -25,18 +80,24 @@ async function seedPosts() {
 			title,
 			description,
 			price,
+			images:[],
 			location: `${cities[random1000].city}, ${cities[random1000].state}`,
 			geometry: {
 				type: 'Point',
 				coordinates: [cities[random1000].longitude, cities[random1000].latitude],
 			},
-			author:  '5e1e44d82236de3cecc09df1',
+			author:  allUsers[randomUserIndex]._id,
+		}
+		for(let i = 0;i < 4;i++){
+			let randomIndex = Math.floor(Math.random() * (imageArray.length+1));
+			postData.images.push({url:imageArray[randomIndex]});
 		}
 		let post = new Post(postData);
+		await generateReviews(post,allUsers);
 		post.properties.description = `<strong><a href="/posts/${post._id}">${title}</a></strong><p>${post.location}</p><p>${description.substring(0, 20)}...</p>`;
-		post.save();
+		await post.save();
 	}
-	console.log('600 new posts created');
+	console.log(`${numberOfPosts} posts created`);
 }
 
 module.exports = seedPosts;
