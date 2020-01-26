@@ -30,8 +30,6 @@ async function generateUsers() {
 		console.log(`user ${i+1} registered`);
 	}
 	console.log('50 users registered');
-	// await User.register ({username:'robert',email:'rgreenstreetdev@gmail.com'},'password');
-	// console.log('user \'robert\' registered');
 };
 
 async function generateReviews(post, users) {
