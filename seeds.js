@@ -45,7 +45,7 @@ async function generateUsers() {
 };
 
 async function generateReviews(post, users) {
-	const randomReviewCount = Math.floor(Math.random() * 6);
+	const randomReviewCount = Math.ciel(Math.random() * 6);
 	console.log(`creating ${randomReviewCount} reviews for ${post.title}`);
 	try {
 		for(let i = 0;i < randomReviewCount;i++){
@@ -58,7 +58,7 @@ async function generateReviews(post, users) {
 				author:users[randomUserIndex]._id
 			}
 			const newReview = await Review.create(reviewData);
-			console.log(`review # ${i+0} added to post`)
+			console.log(`review # ${i+1} added to post`)
 			post.reviews.push(newReview);
 		}
 		await post.save();
@@ -81,7 +81,7 @@ async function getCoordinates(location) {
 async function seedPosts() {
 	await generateUsers();
 	const allUsers = await User.find({});
-	const numberOfPosts = Math.floor(Math.random()*500);
+	const numberOfPosts = Math.ciel(Math.random()*500);
 	console.log(`creating ${numberOfPosts} posts`);
 	await Post.deleteMany({});
 	console.log('all posts removed');
