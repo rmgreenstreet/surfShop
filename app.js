@@ -16,11 +16,6 @@ const expressSanitizer = require('express-sanitizer');
 const flash = require('connect-flash');
 const async = require('async');
 
-// const seedPosts = require('./seeds');
-// seedPosts();
-
-
-
 const app = express();
 
 //connect to database
@@ -131,6 +126,8 @@ app.use(function(err, req, res, next) {
 //   res.render('error');
 });
 
+// const seedPosts = require('./seeds');
+// seedPosts();
 
 let port = process.env.PORT;
 if (port == null || port == "") {
