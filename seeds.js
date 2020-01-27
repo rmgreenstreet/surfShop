@@ -80,8 +80,8 @@ async function seedPosts() {
 	await generateUsers();
 	//find all users to be used as authors for posts/reviews
 	const allUsers = await User.find({});
-	//decide how many posts between 1 and 500 to create
-	const numberOfPosts = Math.ceil(Math.random()*500);
+	//decide how many posts between 100 and 500 to create
+	const numberOfPosts = Math.floor(Math.random()*(500-100) +100);
 	console.log(`creating ${numberOfPosts} posts`);
 	//delete all existing posts
 	await Post.deleteMany({});
