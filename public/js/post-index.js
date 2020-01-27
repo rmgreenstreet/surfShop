@@ -25,3 +25,27 @@ clear.addEventListener('click', e => {
   document.getElementById('location').value = '';
   document.querySelectorAll('input[type=radio]:checked = false');
 });
+
+function geoFindMe(e) {
+  e.preventDefault();
+  const status = document.querySelector('#status');
+  const locationInput = document.querySelector('#location');;
+  function success(position) {
+    const lng = position.coords.longitude;
+    const lat = position.coords.latitude;
+
+    status.textContent = '';
+    locationInput.value = `[${lng},${lat}]`;
+  }
+  function error() {
+    status.textContent = 'Unable to retrieve location'
+  }
+  if(!navigator.geolocation) {
+    status.textContent = 'Geolocation is not supported in your browser. Please upgrade to a modern browser to use this feature.'
+  } else {
+    status.textContent = 'Locating...';
+    navigator.geolocation.getCurrentPosition(success, error);
+  }
+}
+
+document.querySelector('#find-me').addEventListener('click', geoFindMe);

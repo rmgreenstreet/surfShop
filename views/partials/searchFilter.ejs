@@ -10,7 +10,8 @@
         <div>
             <label for="location">Location</label>
             <input type="text" name="location" id="location" value="<%= query.location %>" placeholder="Address or ZIP Code">
-            <a href="#"><i class="fas fa-map-marker-alt" alt="Use My Location"></i></a>
+            <a href="#" id="find-me"><i class="fas fa-map-marker-alt" title="Use My Location"></i></a>
+            <p id="status"></p>
         </div>
         <legend>
             Distance (Miles)

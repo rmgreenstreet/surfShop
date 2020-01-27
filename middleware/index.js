@@ -117,15 +117,24 @@ const middleware = {
 				]});
 			}
 			if(location) {
-				//geocode the location to extract geo-coordinates (lng, lat)
-				const response = await geocodingClient
-				.forwardGeocode({
-					query:location,
-					limit:1
-				})
-				.send();
-				//destructure coordinates [ <longitude>, <latitude>]
-				const {coordinates} = response.body.features[0].geometry;
+				let coordinates;
+				try {
+					if(typeof JSON.parse(location) === 'number') {
+						throw new Error;
+					  }
+					location = JSON.parse(location);
+					coordinates = location;
+				} catch(err) {
+					//geocode the location to extract geo-coordinates (lng, lat)
+					const response = await geocodingClient
+					.forwardGeocode({
+						query:location,
+						limit:1
+					})
+					.send();
+					//destructure coordinates [ <longitude>, <latitude>]
+					coordinates = response.body.features[0].geometry.coordinates;
+				}
 				//set max distance to user's choice or 25 miles
 				let maxDistance = distance || 25;
 				// now we need to convert the distance to meters (why?), one mile is approximately 1609.34 meters
