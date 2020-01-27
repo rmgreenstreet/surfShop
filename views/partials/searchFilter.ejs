@@ -10,7 +10,7 @@
         <div>
             <label for="location">Location</label>
             <input type="text" name="location" id="location" value="<%= query.location %>" placeholder="Address or ZIP Code">
-            <small><a href="#"><i class="far fa-map-marker-alt" alt="Use My Location"></i></a></small>
+            <a href="#"><i class="fas fa-map-marker-alt" alt="Use My Location"></i></a>
         </div>
         <legend>
             Distance (Miles)
@@ -33,26 +33,26 @@
         <legend>
             Price
         </legend>
-        <input type="number" name="price[min]" id="min" min="0" max="10000" step="1" placeholder="Min" value="<%= query.price.min %>">
+        <input type="number" name="price[min]" id="min" min="0" max="10000" step="1" placeholder="Min" value="<%= query.price ? query.price.min : '' %>">
         <label for="min">Min</label>
-        <input type="number" name="price[max]" id="max" min="0" max="10000" step="1" placeholder="Max" value="<%= query.price.max %>">
+        <input type="number" name="price[max]" id="max" min="0" max="10000" step="1" placeholder="Max" value="<%= query.price ? query.price.max : '' %>">
         <label for="max">Max</label>
     </fieldset>
     <fieldset>
         <legend>
             Rating
         </legend>
-        <input type="checkbox" name="avgRating[]" id="zero-stars" value="0" <%= query.avgRating.includes(0) ? 'checked' : '' %>>
+        <input type="radio" name="avgRating" id="zero-stars" value="0" <%= query.avgRating && (query.avgRating === 0) ? 'checked' : '' %>>
         <label for="zero-stars">0 stars</label>
-        <input type="checkbox" name="avgRating[]" id="one-star" value="1 <%= query.avgRating.includes(1) ? 'checked' : '' %>">
+        <input type="radio" name="avgRating" id="one-star" value="1 <%= query.avgRating && (query.avgRating === 1) ? 'checked' : '' %>">
         <label for="one-star">1 star</label>
-        <input type="checkbox" name="avgRating[]" id="two-stars" value="2" <%= query.avgRating.includes(2) ? 'checked' : '' %>>
+        <input type="radio" name="avgRating" id="two-stars" value="2" <%= query.avgRating && (query.avgRating === 2) ? 'checked' : '' %>>
         <label for="two-stars">2 stars</label>
-        <input type="checkbox" name="avgRating[]" id="three-stars" value="3" <%= query.avgRating.includes(3) ? 'checked' : '' %>>
+        <input type="radio" name="avgRating" id="three-stars" value="3" <%= query.avgRating && (query.avgRating === 3) ? 'checked' : '' %>>
         <label for="three-stars">3 stars</label>
-        <input type="checkbox" name="avgRating[]" id="four-stars" value="4" <%= query.avgRating.includes(4) ? 'checked' : '' %>>
+        <input type="radio" name="avgRating" id="four-stars" value="4" <%= query.avgRating && (query.avgRating === 4) ? 'checked' : '' %>>
         <label for="four-stars">4 stars</label>
-        <input type="checkbox" name="avgRating[]" id="five-stars" value="5" <%= query.avgRating.includes(5) ? 'checked' : '' %>>
+        <input type="radio" name="avgRating" id="five-stars" value="5" <%= query.avgRating && (query.avgRating === 5) ? 'checked' : '' %>>
         <label for="five-stars">5 stars</label>
         <div><a href="/posts">Reset Search</a></div>
     </fieldset>

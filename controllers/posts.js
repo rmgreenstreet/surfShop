@@ -1,6 +1,5 @@
 require('dotenv');
 const Post = require('../models/post');
-// const mbxGeocoding = require ('@mapbox/mapbox-sdk/services/geocoding');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const { imageDelete } = require('../cloudinary');
 
@@ -10,17 +9,13 @@ module.exports = {
     async postIndex(req,res,next) {
         const { dbQuery } = res.locals;
         delete res.locals.dbQuery;
-        let posts = await Post.paginate(dbquery,{
+        let posts = await Post.paginate(dbQuery,{
             page: req.query.page || 1,
             limit: 10,
             sort:'-_id'
-        })
-        .populate({
-            path:'author',
-            ref:'User'
         });
         posts.page = Number(posts.page);
-        console.log(posts.length+' posts found');
+        console.log(posts.docs.length+' posts found');
         if(!posts.docs.length && res.locals.query) {
             res.locals.error = 'No results match that search.';
         }

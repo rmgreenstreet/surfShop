@@ -12,8 +12,8 @@
             <div class="card"><div id="map"></div></div>
         </div>
     </div>
+    <% include ../partials/pagination %>
     <div class="row">
-        <% include ../partials/pagination %>
             <div class="card-columns">
             <% posts.docs.forEach(post => { %>
                 <div class="card">
@@ -31,17 +31,15 @@
                                 <p>Price: $<%= post.price %></p>
                             <p>Description: <%= (post.description.length < 50 ? post.description : post.description.substring(0,50)+'...')%></p>
                             <p>Location: <%= post.location %></p>
-                            <p>Author: <%= post.author.username %></p>
                             <p><a href="/posts/<%= post._id %>">More Info</a></p>
                             </div>
                         </div>
                     </div>
                 </div>
             <% }); %>
-            </div>
-            <% include ../partials/pagination %>
+        </div>
     </div>
-    
+    <% include ../partials/pagination %>
 </div>
 
 <script>

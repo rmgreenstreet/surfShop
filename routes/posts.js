@@ -4,7 +4,12 @@ const router = express.Router({mergeParams:true});
 const multer = require('multer');
 const { storage } = require('../cloudinary');
 const upload = multer({ storage })
-const { asyncErrorHandler, isLoggedIn, isPostAuthor } = require('../middleware');
+const { 
+    asyncErrorHandler, 
+    isLoggedIn, 
+    isPostAuthor, 
+    searchAndFilterPosts 
+} = require('../middleware');
 const { 
     postIndex, 
     postNew, 
@@ -17,24 +22,49 @@ const {
 
 
 /* GET posts index page /posts */
-router.get('/',asyncErrorHandler(postIndex));
+router.get('/', 
+asyncErrorHandler(searchAndFilterPosts), 
+asyncErrorHandler(postIndex)
+);
 
 /* GET create post page  */
-router.get('/new', isLoggedIn, postNew);
+router.get('/new', 
+isLoggedIn, 
+postNew
+);
 
 /* POST new post  */
-router.post('/', isLoggedIn, upload.array('image', 4) ,asyncErrorHandler(postCreate));
+router.post('/', 
+isLoggedIn, 
+upload.array('image', 4),
+asyncErrorHandler(postCreate)
+);
 
 /* GET show page  */
-router.get('/:id', asyncErrorHandler(postShow));
+router.get('/:id', 
+asyncErrorHandler(postShow)
+);
 
 /* GET posts edit page  */
-router.get('/:id/edit' ,isLoggedIn, isPostAuthor, postEdit);
+router.get('/:id/edit',
+isLoggedIn, 
+isPostAuthor, 
+postEdit
+);
 
 /* PUT posts update  */
-router.put('/:id', isLoggedIn, isPostAuthor, upload.array('image', 4), asyncErrorHandler(postUpdate));
+router.put('/:id', 
+isLoggedIn, 
+isPostAuthor, 
+upload.array('image', 4), 
+asyncErrorHandler(postUpdate)
+);
 
 /* POST delete post  */
-router.delete('/:id/', isLoggedIn, isPostAuthor, asyncErrorHandler(postDestroy));
+router.delete('/:id/', 
+isLoggedIn, 
+isPostAuthor, 
+asyncErrorHandler(postDestroy)
+);
 
 module.exports = router;

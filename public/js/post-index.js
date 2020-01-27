@@ -18,3 +18,10 @@ async function createMap() {
         .setHTML('<h3>' + post.title + '</h3><p>' + post.location + '</p>'))
         .addTo(map);
 }
+
+const clear = document.getElementById('clear-distance');
+clear.addEventListener('click', e => {
+  e.preventDefault();
+  document.getElementById('location').value = '';
+  document.querySelectorAll('input[type=radio]:checked = false');
+});
