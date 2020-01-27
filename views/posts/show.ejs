@@ -36,6 +36,7 @@
                 <p>Price: $<%= post.price %></p>
                 <p>Description: <%= post.description %></p>
                 <p>Location: <%= post.location %></p>
+                <p>Posted by: <%= post.author.username %></p>
                 <div class="averageStars mb-2">
                     <% for(let i = 0;i<5;i++) { %>
                         <% if(i < floorRating) { %>

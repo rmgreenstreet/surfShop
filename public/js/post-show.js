@@ -17,3 +17,9 @@ function initMap() {
         infowindow.open(map, marker);
     });
 }
+
+//toggle edit review form
+$('.toggle-review-edit-form').on('click', function() {
+    $(this).text() === 'Edit' ? $(this).text('Cancel Edit'):$(this).text('Edit');
+    $(this).parent().siblings('.edit-review-form').toggle(500);
+});

@@ -19,7 +19,7 @@ module.exports = {
 	// GET /
 	async landingPage(req, res, next) {
 		const posts = await Post.find({});
-		res.render('index', { posts, mapBoxToken, title: 'Surf Shop - Home' });
+		res.render('index', { posts, mapBoxToken, title: 'Surf Shop - Home', page:'home'});
 	},
 	// GET /register
 	getRegister(req, res, next) {

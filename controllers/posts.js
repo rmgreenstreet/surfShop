@@ -14,10 +14,14 @@ module.exports = {
             page: req.query.page || 1,
             limit: 10,
             sort:'-_id'
+        })
+        .populate({
+            path:'author',
+            ref:'User'
         });
         posts.page = Number(posts.page);
         console.log(posts.length+' posts found');
-        if(!post.docs.length && res.locals.query) {
+        if(!posts.docs.length && res.locals.query) {
             res.locals.error = 'No results match that search.';
         }
         res.render('posts/index',{posts, mapBoxToken, title: 'SurfShop - All Posts', page:'all_posts' });
