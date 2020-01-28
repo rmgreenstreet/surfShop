@@ -14,7 +14,11 @@ const User = require('./models/user');
 const methodOverride = require('method-override');
 const expressSanitizer = require('express-sanitizer');
 const flash = require('connect-flash');
+const helmet = require('helmet');
 const async = require('async');
+
+//add moment to every view
+app.locals.moment = require('moment');
 
 const app = express();
 
@@ -48,14 +52,21 @@ app.use(express.static(path.join(__dirname, './public')));
 
 app.use(methodOverride("_method"));
 app.use(expressSanitizer());
+var expiryDate = new Date(Date.now() + 60 * 60 * 1000 * 6) // 6 hours
 app.use(expressSession({
 		secret:"surfs up brah",
 		resave:false,
-		saveUninitialized:false
+		saveUninitialized:false,
+		name: 'sessionId',
+		secure:true,
+		httpOnly:true,
+		expires: expiryDate
 		}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(helmet());
+app.disable('x-powered-by');
 app.use(function(req, res, next){
 	res.locals.currentUser = req.user;
 	// res.locals.error = req.flash("error");
