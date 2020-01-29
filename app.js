@@ -17,10 +17,10 @@ const flash = require('connect-flash');
 const helmet = require('helmet');
 const async = require('async');
 
+const app = express();
+
 //add moment to every view
 app.locals.moment = require('moment');
-
-const app = express();
 
 //connect to database
 mongoose.connect(process.env.DATABASE_URL,{
