@@ -4,6 +4,7 @@ const Review = require('./review');
 const mongoosePaginate = require('mongoose-paginate');
 const mbxGeocoding = require ('@mapbox/mapbox-sdk/services/geocoding');
 const geocodingClient = mbxGeocoding({accessToken:process.env.MAPBOX_TOKEN});
+const moment = require('moment');
 
 const postSchema = new Schema({
   title:String,
@@ -47,6 +48,11 @@ const postSchema = new Schema({
   averageRating:{
     type:Number,
     default:0
+  },
+  slug:String,
+  date:{
+    type:Date,
+    default:Date.now()
   }
 });
 //removes all reviews associated with the particular post when 'remove' is called. only works if you have found the particular post first, not using Post.findByIdAndRemove
@@ -59,6 +65,7 @@ postSchema.pre('remove', async function () {
   });
 });
 
+//calculates average rating based on ratings submitted on this post by users
 postSchema.methods.calculateAverageRating = function() {
   console.log('calculating averate rating')
   console.log('post\'s current average rating is: '+this.averageRating);
@@ -82,6 +89,7 @@ postSchema.methods.calculateAverageRating = function() {
   return floorRating;
 }
 
+//uses mapbox to forward geocode coordinates/place name
 postSchema.methods.getCoordinates = async function(location) {
   try {
     let response = await geocodingClient.forwardGeocode({
@@ -99,6 +107,28 @@ postSchema.methods.getCoordinates = async function(location) {
   }
   return  
 }
+
+//generate url slug using post title and date created
+async function slugWithDate(text) {
+  let myText = text.toString().toLowerCase()
+    .replace(/\s+/g, '-')        // Replace spaces with -
+    .replace(/[^\w\-]+/g, '')   // Remove all non-word chars
+    .replace(/\-\-+/g, '-')      // Replace multiple - with single -
+    .replace(/^-+/, '')          // Trim - from start of text
+    .replace(/-+$/, '');         // Trim - from end of text
+    
+    //
+    let date = moment(this.date)
+      , formatted = date.format('YYYY[-]MM[-]DD[-]');
+
+      return formatted + myText;
+
+}
+
+postSchema.pre('save', async function (next) {
+  this.slug = await slugWithDate(this.title);
+  next();
+});
 
 postSchema.plugin(mongoosePaginate);
 postSchema.index({ geometry: '2dsphere' });

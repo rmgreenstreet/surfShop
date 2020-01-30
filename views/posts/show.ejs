@@ -168,7 +168,7 @@
                     </div>
                 <% } %>
             <% } else { %>
-                <a href="/login?returnTo=true"><h2>Log In to write a review</h2></a>
+                <a href="/login?returnTo=true"><p>Log In to write a review</p></a>
             <% } %>
         </div>
     </div>
@@ -193,14 +193,14 @@
     </div>
 </div>
 <script>
-
-    let post = <%- JSON.stringify(post) %>;
+    
     mapboxgl.accessToken = '<%= mapBoxToken %>';
+    let post = <%- JSON.stringify(post) %>;
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/light-v10',
       center: post.geometry.coordinates,
-      zoom: 3
+      zoom: 5
     });
 
     // create a HTML element for post location

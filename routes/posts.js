@@ -41,7 +41,7 @@ asyncErrorHandler(postCreate)
 );
 
 /* GET show page  */
-router.get('/:id', 
+router.get('/:slug', 
 asyncErrorHandler(postShow)
 );
 

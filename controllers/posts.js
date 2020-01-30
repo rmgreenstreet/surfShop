@@ -43,7 +43,7 @@ module.exports = {
 	},
     //show single post
     async postShow (req,res,next) {
-        post = await Post.findById(req.params.id).populate({
+        post = await Post.findOne({slug:req.params.slug}).populate({
             path:'reviews',
             model:'Review',
             options:{sort: {'_id':-1}},
