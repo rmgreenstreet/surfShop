@@ -1,50 +1,81 @@
 <form action="/posts" method="GET">
-    <fieldset>
-        <legend>
+    <fieldset class="form-group">
+        <legend class="sr-only">
             Search
         </legend>
-        <label for="search">Search</label>
-        <input type="text" name="search" id="search" placeholder="Search" value="<%= query.search %>">
+        <div class="input-group mb-2">
+            <div class="input-group-prepend">
+                <label for="search" class="input-group-text">Search</label>
+            </div>
+            <input type="text" name="search" id="search" class="form-control" placeholder="Search" value="<%= query.search %>">
+        </div>
     </fieldset>
-    <fieldset>
+    <fieldset class="form-group">
+        <legend class="d-none">
+            Location
+        </legend>
         <div>
-            <label for="location">Location</label>
-            <input type="text" name="location" id="location" value="<%= query.location %>" placeholder="Address or ZIP Code">
-            <a href="#" id="find-me"><i class="fas fa-map-marker-alt" title="Use My Location"></i></a>
+            <label class="sr-only" for="location">Location</label>
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">Location</div>
+                </div>
+                <input type="text" name="location" class="form-control" id="location" value="<%= query.location %>" placeholder="Address or ZIP Code">
+                <a href="#" id="find-me"><i class="fas fa-map-marker-alt ml-2" title="Use My Location"></i></a>
+            </div>
+        </div>
             <p id="status"></p>
-        </div>
-        <legend>
-            Distance (Miles)
-        </legend>
-        <div>
-            <input type="radio" name="distance" id="distance25" value="25" <%= query.distance === '25' ? 'checked' : '' %>>
-            <label for="distance25">25</label>
-        </div>
-        <div>
-            <input type="radio" name="distance" id="distance50" value="50" <%= query.distance === '50' ? 'checked' : '' %>>
-            <label for="distance50">50</label>
-        </div>
-        <div>
-            <input type="radio" name="distance" id="distance100" value="100" <%= query.distance === '100' ? 'checked' : '' %>>
-            <label for="distance100">100</label>
-        </div>
-        <div><a href="#" id="clear-distance">Clear</a></div>
     </fieldset>
-    <fieldset>
-        <legend>
-            Price
-        </legend>
-        <input type="number" name="price[min]" id="min" min="0" max="10000" step="1" placeholder="Min" value="<%= query.price ? query.price.min : '' %>">
-        <label for="min">Min</label>
-        <input type="number" name="price[max]" id="max" min="0" max="10000" step="1" placeholder="Max" value="<%= query.price ? query.price.max : '' %>">
-        <label for="max">Max</label>
+    <fieldset class="form-group-inline">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <legend class="input-group-text">
+                    Distance (Miles)
+                </legend>
+            </div>
+            <div class="form-check form-check-inline ml-n1 mr-0">
+                <input type="radio" name="distance" id="distance25" class="form-check-input form-control" value="25" <%= query.distance === '25' ? 'checked' : '' %>>
+                <label for="distance25" class="form-check-label form-control">25</label>
+            </div>
+            <div class="form-check form-check-inline ml-n1 mr-0">
+                <input type="radio" name="distance" id="distance50" class="form-check-input form-control" value="50" <%= query.distance === '50' ? 'checked' : '' %>>
+                <label for="distance50"class="form-check-label form-control">50</label>
+            </div>
+            <div class="form-check form-check-inline mx-n1">
+                <input type="radio" name="distance" id="distance100" class="form-check-input form-control" value="100" <%= query.distance === '100' ? 'checked' : '' %>>
+                <label for="distance100"class="form-check-label form-control">100</label>
+            </div>
+        </div>
+        
+        
+        <div><a href="#" id="clear-distance">Clear Distance</a></div>
     </fieldset>
-    <fieldset>
+    <fieldset class="form-group">
+        
+
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <legend class="input-group-text">
+                    Price
+                </legend>
+            </div>
+            <input type="number" name="price[min]" id="min" class="form-control" min="0" max="10000" step="1" value="<%= query.price ? query.price.min : '' %>" placeholder="Min">
+            <label for="min" class="sr-only">Min</label>
+            <input type="number" name="price[max]" id="max" class="form-control" min="0" max="10000" step="1" value="<%= query.price ? query.price.max : '' %>" placeholder="Max">
+            <label for="max" class="sr-only">Max</label>
+        </div>
+
+        
+    </fieldset>
+    <fieldset class="starability-basic mb-2">
         <legend>
             Rating
         </legend>
-        <input type="radio" name="avgRating" id="zero-stars" value="0" <%= query.avgRating && (query.avgRating === 0) ? 'checked' : '' %>>
-        <label for="zero-stars">0 stars</label>
+
+        <div class="d-none">
+            <input type="radio" name="avgRating" id="zero-stars" class="input-no-rate" value="0" <%= query.avgRating && (query.avgRating === 0) ? 'checked' : '' %>>
+            <label for="zero-stars">0 stars</label>
+        </div>
         <input type="radio" name="avgRating" id="one-star" value="1 <%= query.avgRating && (query.avgRating === 1) ? 'checked' : '' %>">
         <label for="one-star">1 star</label>
         <input type="radio" name="avgRating" id="two-stars" value="2" <%= query.avgRating && (query.avgRating === 2) ? 'checked' : '' %>>
@@ -55,7 +86,7 @@
         <label for="four-stars">4 stars</label>
         <input type="radio" name="avgRating" id="five-stars" value="5" <%= query.avgRating && (query.avgRating === 5) ? 'checked' : '' %>>
         <label for="five-stars">5 stars</label>
-        <div><a href="/posts">Reset Search</a></div>
     </fieldset>
-    <input type="submit">
+    <input type="submit" class="btn btn-primary">
+    <p class="d-block"><a href="/posts">Reset Search</a></p>
 </form>
