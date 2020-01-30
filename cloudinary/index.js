@@ -11,7 +11,7 @@ cloudinary.config({
 
 const storage = cloudinaryStorage({
     cloudinary: cloudinary,
-    folder: 'surf_shop/dev/posts',
+    folder: ('surf_shop/'+process.env.CLOUDINARY_FOLDER+'posts'),
     allowedFormats: ['jpeg', 'jpg', 'png'],
     filename: function (req, file, cb) {
         let buf = crypto.randomBytes(16);
