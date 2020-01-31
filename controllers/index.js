@@ -7,6 +7,8 @@ const { cloudinary } = require('../cloudinary');
 const { deleteProfileImage } = require('../middleware');
 const crypto = require('crypto');
 const sgMail = require('@sendgrid/mail');
+const ColorThief = require('color-thief');
+let colorThief = new ColorThief();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function loginAfterChange (user,req,res) {
@@ -15,12 +17,16 @@ async function loginAfterChange (user,req,res) {
     await login(user);
 };
 
+
+
 module.exports = {
 	// GET /
 	async landingPage(req, res, next) {
         const posts = await Post.find({}).sort('-_id').exec();
         const recentPosts = posts.slice(0,3);
-		res.render('index', { posts, mapBoxToken, recentPosts, title: 'Surf Shop - Home', page:'home'});
+        const randomIndex = await Math.ceil(Math.random()*posts.length);
+        const color = await colorThief.getPalette(`public/${posts[randomIndex].images[0].url}`,1);
+		res.render('index', { posts, mapBoxToken, randomIndex, color, recentPosts, title: 'Surf Shop - Home', page:'home'});
 	},
 	// GET /register
 	getRegister(req, res, next) {

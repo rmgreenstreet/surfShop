@@ -7,6 +7,7 @@ const { imageDelete } = require('../cloudinary');
 module.exports = {
     //posts index
     async postIndex(req,res,next) {
+        
         const { dbQuery } = res.locals;
         delete res.locals.dbQuery;
         let posts = await Post.paginate(dbQuery,{
@@ -14,12 +15,14 @@ module.exports = {
             limit: 10,
             sort:'-_id'
         });
+        
         posts.page = Number(posts.page);
         console.log(posts.docs.length+' posts found');
         if(!posts.docs.length && res.locals.query) {
             res.locals.error = 'No results match that search.';
         }
-        res.render('posts/index',{posts, mapBoxToken, title: 'SurfShop - All Posts', page:'all_posts' });
+        const randomIndex = await Math.ceil(Math.random()*posts.docs.length);
+        res.render('posts/index',{posts, randomIndex, mapBoxToken, title: 'SurfShop - All Posts', page:'all_posts' });
     },
     //new post page
     postNew(req,res,next) {

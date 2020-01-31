@@ -1,8 +1,14 @@
 <% layout('layouts/boilerplate') -%>
 <div class="container">
-    <div class="jumbotron" style="background-image: url('')">
-        <h1>Posts Index</h1>
-        <a href="/posts/new"><button class="btn btn-info">New Post</button></a>
+    <div class="jumbotron" id="indexHero" style="background-image: url('<%= posts.docs[randomIndex].images[0].url %>'); background-size:cover; background-position:center;">
+        <div class="row">
+            <div class="col-4">
+                <div class="card p-2">
+                    <h1>All Posts</h1>
+                    <a href="/posts/new"><button class="btn btn-info">New Post</button></a>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-md-4">

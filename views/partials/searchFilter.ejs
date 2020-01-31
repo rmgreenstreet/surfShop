@@ -26,7 +26,7 @@
         </div>
             <p id="status"></p>
     </fieldset>
-    <fieldset class="form-group-inline">
+    <fieldset class="form-group-inline mb-2">
         <div class="input-group">
             <div class="input-group-prepend">
                 <legend class="input-group-text">
@@ -48,7 +48,7 @@
         </div>
         
         
-        <div><a href="#" id="clear-distance">Clear Distance</a></div>
+        <small><a href="#" id="clear-distance">Clear Distance</a></small>
     </fieldset>
     <fieldset class="form-group">
         
@@ -67,11 +67,14 @@
 
         
     </fieldset>
-    <fieldset class="starability-basic mb-2">
-        <legend>
-            Rating
-        </legend>
-
+    <fieldset class="starability-basic mb-0">
+        <div class="input-group d-none">
+            <div class="input-group-prepend">
+                <legend class="input-group-text">
+                    Rating
+                </legend>
+            </div>
+        </div>
         <div class="d-none">
             <input type="radio" name="avgRating" id="zero-stars" class="input-no-rate" value="0" <%= query.avgRating && (query.avgRating === 0) ? 'checked' : '' %>>
             <label for="zero-stars">0 stars</label>
@@ -87,6 +90,6 @@
         <input type="radio" name="avgRating" id="five-stars" value="5" <%= query.avgRating && (query.avgRating === 5) ? 'checked' : '' %>>
         <label for="five-stars">5 stars</label>
     </fieldset>
-    <input type="submit" class="btn btn-primary">
-    <p class="d-block"><a href="/posts">Reset Search</a></p>
+    <input type="submit" class="btn btn-primary mb-1">
+    <small class="d-block"><a href="/posts">Reset Search</a></small>
 </form>

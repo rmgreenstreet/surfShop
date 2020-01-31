@@ -54,3 +54,18 @@ button {
   max-height:25rem;
   object-fit:contain !important;
 }
+
+#indexHero, #homeHero {
+  color:white;
+}
+
+#homeHero .card {
+ background-color:rgba(153, 153, 153, 0.4) !important;
+}
+#indexHero .card {
+ background-color:rgba(153, 153, 153, 0.4) !important;
+}
+/* 
+#homeHero .btn {
+  background-color:rgb(0, 132, 255) !important;
+} */
