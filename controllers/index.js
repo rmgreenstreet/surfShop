@@ -25,7 +25,8 @@ module.exports = {
         const posts = await Post.find({}).sort('-_id').exec();
         const recentPosts = posts.slice(0,3);
         const randomIndex = await Math.ceil(Math.random()*posts.length);
-        const color = await colorThief.getPalette(`public/${posts[randomIndex].images[0].url}`,1);
+        const dominantColor = await colorThief.getColor(`public/${posts[randomIndex].images[0].url}`);
+        const color = `rgb(${dominantColor[0]},${dominantColor[1]},${dominantColor[2]})`
 		res.render('index', { posts, mapBoxToken, randomIndex, color, recentPosts, title: 'Surf Shop - Home', page:'home'});
 	},
 	// GET /register
