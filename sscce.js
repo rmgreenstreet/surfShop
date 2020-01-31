@@ -7,10 +7,8 @@ let colorThief = new ColorThief();
 
 async function getDominantColor() {
     const img = 'public/img/seed/big-waves-2193828__340.webp';
-    if(img.complete) {
-        const dominantColor = await colorThief.getColor(img)
-        console.log(dominantColor);
-    }
+    const dominantColor = await colorThief.getColor(img);
+    console.log(dominantColor);
 }
 
 getDominantColor();
