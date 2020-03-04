@@ -34,20 +34,10 @@
 		/>
 		<!-- starability raating css -->
 		<link rel="stylesheet" type="text/css" href="/css/starability-basic.min.css"/>
-		<!-- dynamic styles -->
-		<style>
-			#navbar {
-				background-color:<%= typeof colorPalette !== 'undefined' ? colorPalette[1] : ''%>; 
-				color:<%= typeof colorPalette !== 'undefined' ? colorPalette[4] : ''%>;
-			}
-			 #navbar a {
-				color:<%= typeof colorPalette !== 'undefined' ? colorPalette[4] : ''%>;
-			 }
-		</style>
     </head>
     <body>
 		
-		<nav class="navbar navbar-expand-lg <%= typeof colorPalette === 'undefined' ? 'navbar-dark bg-dark' : '' %>" id="navbar"  style="">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
 		  <a class="navbar-brand" href="/">SurfShop</a>
 		  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
 			<span class="navbar-toggler-icon"></span>

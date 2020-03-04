@@ -1,36 +1,18 @@
 <% layout('layouts/boilerplate') -%>
-<div class="jumbotron mt-n2" id="homeHero" style="background-image: url('<%= posts[randomIndex].images[0].url %>'); background-size:cover; background-position:center;">
-    <div class="row">
-        <div class="col"></div>
-        <div class="col-3">
-            <div class="card p-2">
-                <h1 ><%= title %></h1>
-                <p>Welcome to <%= title %></p>
-                <a href="/posts" class="btn bg-light" style="">View All Posts</a>
+<div class="container">
+    <div class="jumbotron" id="homeHero" style="background-image: url('<%= posts[randomIndex].images[0].url %>'); background-size:cover; background-position:center;">
+        <div class="row">
+            <div class="col-5">
+                <div class="card p-2">
+                    <h1><%= title %></h1>
+                    <p>Welcome to <%= title %></p>
+                    <a href="/posts" class="btn" style="background-color:<%= color %>;">View All Posts</a>
+                </div>
             </div>
         </div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
-        <div class="col"></div>
     </div>
-</div>
-<div class="container">
     <div class="card">
         <div id="map"></div>
-    </div>
-
-    <div class="card mt-3">
-        <div class="row" style="height:30vh;">
-            <div class="col" style="background-color:<%= colorPalette[0] %>;"><%= colorPalette[0] %></div>
-            <div class="col" style="background-color:<%= colorPalette[1] %>;"><%= colorPalette[1] %></div>
-            <div class="col" style="background-color:<%= colorPalette[2] %>;"><%= colorPalette[2] %></div>
-        </div>
-        <div class="row" style="height:30vh;">
-            <div class="col" style="background-color:<%= colorPalette[3] %>;"><%= colorPalette[3] %></div>
-            <div class="col" style="background-color:<%= colorPalette[4] %>;"><%= colorPalette[4] %></div>
-            <div class="col" style="background-color:<%= colorPalette[5] %>;"><%= colorPalette[5] %></div>
-        </div>
     </div>
 </div>
 
