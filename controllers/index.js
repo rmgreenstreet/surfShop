@@ -9,7 +9,6 @@ const crypto = require('crypto');
 const sgMail = require('@sendgrid/mail');
 const ColorThief = require('color-thief');
 const colorThief = new ColorThief();
-const colorConvert = require('color-convert');
 const Color = require('color');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
