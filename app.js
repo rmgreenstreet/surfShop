@@ -1,5 +1,5 @@
 
-	require('dotenv').config({ path: '.env' });
+
 const createError = require('http-errors');
 const express = require('express');
 const engine = require('ejs-mate');
@@ -19,6 +19,7 @@ const helmet = require('helmet');
 const async = require('async');
 
 const app = express();
+if (app.get('env') == 'development'){ require('dotenv').config(); }
 
 //add moment to every view
 app.locals.moment = require('moment');
