@@ -1,6 +1,5 @@
 const User = require('../models/user');
 const Post = require('../models/post');
-const passport = require('passport');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const util = require('util');
 const { cloudinary } = require('../cloudinary');
@@ -9,7 +8,6 @@ const crypto = require('crypto');
 const sgMail = require('@sendgrid/mail');
 const ColorThief = require('color-thief');
 const colorThief = new ColorThief();
-const Color = require('color');
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 async function loginAfterChange (user,req,res) {
