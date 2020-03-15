@@ -16,13 +16,26 @@ async function loginAfterChange (user,req,res) {
     await login(user);
 };
 
-
+async function getUserForReset (req) {
+    const {token} = req.params;
+    /* see 1) if the reset token exists and matches 
+    the one saved in the user and 2) hasn't expired yet */
+    const user = await User.findOne({
+        resetPasswordToken:token,
+        resetPasswordExpires: { $gt: Date.now() }
+    });
+    return user;
+};
 
 module.exports = {
 	// GET /
 	async landingPage(req, res, next) {
+        //find all posts in the database
         const posts = await Post.find({}).sort('-_id').exec();
+        //get the three most recent posts to show on the home page
         const recentPosts = posts.slice(0,3);
+        /*choose a random post from all posts to get the first image from and then 
+        get the dominant color and set ui colors based on that */
         const randomIndex = await Math.ceil(Math.random()*posts.length);
         const dominantColor = await colorThief.getColor(`public/${posts[randomIndex].images[0].url}`);
         const color = `rgb(${dominantColor[0]},${dominantColor[1]},${dominantColor[2]})`
@@ -35,24 +48,31 @@ module.exports = {
 	// POST /register
 	async postRegister(req, res, next) {
         try {
+            /* if a file was uploaded, add the image to the request body */
             if(req.file) {
                 const { secure_url, public_id } = req.file;
                 req.body.image = {secure_url, public_id};
             }
+            // create a new user in the database using the request body
             const user = await User.register(new User(req.body), req.body.password);
+            //log the user in after signing up
             req.login(user, function(err) {
                 if (err) return next(err);
+                //display a success message to the user
                 req.session.success = `Welcome to Surf Shop, ${user.username}!`;
                 res.redirect('/');
             });
         }
         catch (err) {
+            /*if registration fails for any reason, 
+            delete the image that was uploaded from cloudinary */
             deleteProfileImage(req);
             const { username, email } = req.body;
             let error = err.message;
             if (error.includes('E11000') && error.includes('email')) {
-                error = 'A user with the given email is already registered';
+                error = `A user with the email ${email} is already registered`;
             }
+            /* send the username and email back to populate into the form so they don't have to be re-typed */
             res.render('register', { title: 'Surf Shop - Register', page:'register', username, email, error })
         }
 	},
@@ -63,6 +83,8 @@ module.exports = {
             return res.redirect('/');
         }
         if(req.query.returnTo) {
+            /* if user was sent to login page from anywhere 'isLoggedIn' is called, 
+            send them back there after logging in */
             req.session.redirectTo = req.headers.referer;
         }
 		res.render('login', { title: 'Login' , page:'login'});
@@ -79,6 +101,8 @@ module.exports = {
                 return next(err);
             }
             req.session.success = `Welcome back, ${username}`;
+            /*if they came to the login page from somewhere that called 'isLoggedIn', 
+            send them back there after logging in, then remove the hook to do that */
             const redirectUrl = req.session.redirectTo || '/';
             delete req.session.redirectTo;
             res.redirect(redirectUrl);
@@ -90,6 +114,7 @@ module.exports = {
 	  res.redirect('/');
     },
     async getProfile(req,res,next) {
+        /* get the 10 most recent of this user's posts to display on the page */
         const posts = await Post.find().where('author').equals(req.user._id).limit(10).exec();
         res.render('profile', {posts, title: `Surf Shop - ${req.user.username}'s Profile`, page: 'profile'})
     },
@@ -119,21 +144,18 @@ module.exports = {
         res.render('users/forgot');
      },
      async putForgotPw(req,res,next) {
-         console.log('request received to reset password');
+         /* set a random token to identify this reset request */
         const token = await crypto.randomBytes(20).toString('hex');
-        console.log('finding user with the submitted email address');
         const user = await User.findOne({email:req.body.email});
         if(!user) {
-            console.log('no user with this email found');
             req.session.error = 'No account with this email address found: '+req.body.email;
             return res.redirect('/forgot-password');
         }
         else { 
-            console.log('user with this email found. updating reset token');
+            /* save the reset token to the user and make it only valid for 24 hours */
             user.resetPasswordToken = token;
             user.resetPasswordExpires = Date.now() + 3600000;
             await user.save();
-            console.log('reset token updated. sending reset email');
             const msg = {
                 from:{
                     email:'rgreenstreetdev@gmail.com',
@@ -153,7 +175,6 @@ module.exports = {
             .send(msg)
             .then(() => {
                 //Celebrate
-                console.log('reset email sent')
                 req.session.success = `An email has been sent to ${user.email} with further instructions!`;
                 res.redirect('/');
             })
@@ -167,16 +188,12 @@ module.exports = {
 
                 //Extract response msg
                 const {headers, body} = response;
+                res.redirect('back');
             });
         }
      },
      async getReset(req,res,next) {
-         const {token} = req.params;
-         console.log('token is '+token);
-         const user = await User.findOne({
-             resetPasswordToken:token,
-             resetPasswordExpires: { $gt: Date.now() }
-         });
+         const user = await getUserForReset(req);
          if(!user) {
              req.session.error = "The password reset token is invalid or expired. Please try again.";
              return res.redirect('/forgot-password');
@@ -186,22 +203,19 @@ module.exports = {
          }
      },
      async putReset(req,res,next) {
-        const {token} = req.params;
-        console.log('reset token is '+token);
-        const user = await User.findOne({
-            resetPasswordToken:token,
-            resetPasswordExpires: { $gt: Date.now() }
-        });
-        console.log(user);
+        const user = await getUserForReset(req);
         if(!user) {
             req.session.error = "The password reset token is invalid or expired. Please try again.";
             return res.redirect('/forgot-password');
         }
-        
+        // make sure new password and confirmation match
         if(req.body.password === req.body.confirm) {
+            //set the new password
            await user.setPassword(req.body.password);
+           //clear the reset token and expiration
            user.resetPasswordToken = null;
            user.resetPasswordExpires = null;
+           //save the user and log back in
            await user.save();
            await loginAfterChange(user,req,res);
         } else {

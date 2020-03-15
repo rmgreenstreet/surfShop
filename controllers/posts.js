@@ -5,22 +5,26 @@ const { imageDelete } = require('../cloudinary');
 
 
 module.exports = {
-    //posts index
+    //GET posts index
     async postIndex(req,res,next) {
-        
+        //get any search provided by the user, if it exists
         const { dbQuery } = res.locals;
+        //remove the search from the session
         delete res.locals.dbQuery;
+        //get all posts, 10 per page, for the current page
         let posts = await Post.paginate(dbQuery,{
             page: req.query.page || 1,
             limit: 10,
             sort:'-_id'
         });
-        
+        // set the current page of results
         posts.page = Number(posts.page);
         console.log(posts.docs.length+' posts found');
         if(!posts.docs.length && res.locals.query) {
             res.locals.error = 'No results match that search.';
         }
+        /* choose a random post from the 10 shown on the page to 
+        use the first image as the header background */
         const randomIndex = await Math.ceil(Math.random()*posts.docs.length);
         res.render('posts/index',{posts, randomIndex, mapBoxToken, title: 'SurfShop - All Posts', page:'all_posts' });
     },
@@ -31,21 +35,28 @@ module.exports = {
     //create new post
     async postCreate(req, res, next) {
         req.body.post.images=[];
+        /* if user added images for the post, prepare them to be added to the post object */
         if(req.files && req.files.length) {
             for (const file of req.files) {
                 req.body.post.images.push({url:file.secure_url,public_id:file.public_id});
             }
         }
+        // create a new post in the database
         let post = new Post(req.body.post);
+        // get gps coordinates for the post location
         await post.getCoordinates(req.body.post.location);
+        //set the post author
         post.author=req.user._id;
+        //Set a short description to be displayed on the post index page
 		post.properties.description = `<strong><a href="/posts/${post._id}">${post.title}</a></strong><p>${post.location}</p><p>${post.description.substring(0, 20)}...</p>`;
-		await post.save();
+        //save the post
+        await post.save();
         req.session.success="Post Created!";
 		res.redirect(`/posts/${post.id}`);
 	},
     //show single post
     async postShow (req,res,next) {
+        //find the post in the database and populate all of its reviews (and their authors) using their ids
         post = await Post.findOne({slug:req.params.slug}).populate({
             path:'reviews',
             model:'Review',
@@ -55,6 +66,7 @@ module.exports = {
                 model:'User'
             }
         });
+        //get the post's rating to show on the page
         const floorRating = post.calculateAverageRating();
         res.render('posts/show',{post, mapBoxToken, floorRating, title: 'SurfShop - View '+post.title, page:'view_post' });
     },

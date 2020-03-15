@@ -4,8 +4,10 @@ const Review = require('../models/review');
 module.exports = {
     //create new review
     async reviewCreate(req, res, next) {
-        //find the post
+        //find the post and all of its reviews
         let post = await Post.findById(req.params.id).populate('reviews').exec();
+        /* see if this user has reviewed this post before, and if so, 
+        don't allow them to review again */
         let hasReviewed = await post.reviews.filter(review => {
             return review.author.equals(req.user._id);
         }).length;
@@ -42,9 +44,13 @@ module.exports = {
     //Reviews Destory
     async reviewDestroy (req,res,next) {
         console.log('deleting review');
+        //remove the review reference from the post (saving at the same time)
         await Post.findByIdAndUpdate(req.params.id,{$pull: {reviews: req.params.review_id}});
+        //get the updated post from the db
         let post = await Post.findById(req.params.id);
+        //get and save the new rating wihout the removed review
         calculateAverageRating(post);
+        //remove the review itself from the db
         await Review.findByIdAndRemove(req.params.review_id);
         req.session.success='Review Deleted!';
         res.redirect(`/posts/${req.params.id}`);

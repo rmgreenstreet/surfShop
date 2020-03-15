@@ -42,7 +42,7 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "none"
+    "url": "https://github.com/rmgreenstreet/surfShop.git"
   },
   "keywords": [
     "express",

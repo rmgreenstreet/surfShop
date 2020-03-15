@@ -16,6 +16,8 @@ const middleware = {
 			Promise.resolve(fn(req, res, next))
 						 .catch(next);
 		},
+		/* see if the currently logged in user is the one who wrote the review 
+		attempting to be changed */
 	async isReviewAuthor (req,res,next) {
 		let review = await Review.findById(req.params.review_id);
 		if (review.author.equals(req.user._id)) {
@@ -24,12 +26,15 @@ const middleware = {
 		req.session.error = "This review does not belong to you."
 		return res.redirect(`/posts/${req.params.id}`);
 	},
+	/* see if a user is logged in before allowing user-only actions */
 	async isLoggedIn (req,res,next) {
 		if(req.isAuthenticated()) return next();
 		req.session.error = 'You need to be logged in to do that!';
 		req.session.redirectTo = req.originalUrl;
 		res.redirect('/login');
 	},
+	/* see if the currently logged in user is the one who created the post 
+		attempting to be changed */
 	async isPostAuthor (req,res,next) {
 		const post = await Post.findById(req.params.id);
 		if(post.author.equals(req.user._id)){
@@ -39,6 +44,8 @@ const middleware = {
 		req.session.error='Access Denied!'
 		res.redirect('back')
 	},
+	/* before changing the password in the profile edit form, 
+	make sure the old password provided is correct */
 	async isValidPassword (req,res,next) {
 		const { user } = await User.authenticate()(req.user.username, req.body.currentPassword);
 		if(user){
@@ -54,26 +61,31 @@ const middleware = {
 			return res.redirect('/profile');
 		}
 	},
+	/*  */
 	async changePassword (req,res,next) {
 		const {
 			newPassword,
 			passwordConfirmation,
 		} = req.body;
+		/* if user entered a new password, but left the confirmation blank, let them know */
 		if(newPassword && !passwordConfirmation) {
 			req.session.error = 'Missing password confirmation!';
 			middleware.deleteProfileImage(req);
 			return res.redirect('/profile');
 		}
+		/* if a new password was entered, change it in the user's document */
 		else if(newPassword && passwordConfirmation) {
 			console.log('user wants to change password')
 			const { user } = res.locals;
+			// make sure new password and confirmation match
 			if(newPassword === passwordConfirmation) {
 				console.log('passwords match');
+				//if they match, set the new password
 				await user.setPassword(newPassword);
 				next();
 			} else {
 				console.log('passwords do not match');
-				middleware.deleteProfileImage(req);
+				// middleware.deleteProfileImage(req); /* not sure why I left this here */
 				req.session.error = "New passwords do not match!"
 				return res.redirect('/profile');
 			}
@@ -119,22 +131,20 @@ const middleware = {
 			if(location) {
 				let coordinates;
 				try {
-					if(typeof JSON.parse(location) === 'number') {
-						throw new Error;
-					  }
-					location = JSON.parse(location);
-					coordinates = location;
-				} catch(err) {
 					//geocode the location to extract geo-coordinates (lng, lat)
-					const response = await geocodingClient
-					.forwardGeocode({
-						query:location,
-						limit:1
-					})
-					.send();
-					//destructure coordinates [ <longitude>, <latitude>]
-					coordinates = response.body.features[0].geometry.coordinates;
+				const response = await geocodingClient
+				.forwardGeocode({
+					query:location,
+					limit:1
+				})
+				.send();
+				//destructure coordinates [ <longitude>, <latitude>]
+				coordinates = response.body.features[0].geometry;
+				} catch (err) {
+					req.session.error = 'Invalid location';
 				}
+				
+				
 				//set max distance to user's choice or 25 miles
 				let maxDistance = distance || 25;
 				// now we need to convert the distance to meters (why?), one mile is approximately 1609.34 meters
