@@ -110,6 +110,7 @@ app.use(function (req,res,next) {
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const postsRouter = require('./routes/posts');
+// const cartsRouter = require('./routes/carts');
 const reviewsRouter = require('./routes/reviews');
 
 
@@ -117,6 +118,7 @@ app.use('/', indexRouter);
 app.use('/profile', usersRouter);
 app.use('/posts', postsRouter);
 app.use('/posts/:id/reviews', reviewsRouter);
+// app.use('/cart', cartsRouter);
 
 
 // catch 404 and forward to error handler

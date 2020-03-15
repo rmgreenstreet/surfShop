@@ -57,7 +57,7 @@ module.exports = {
         req.session.success="Post Created!";
 		res.redirect(`/posts/${post.id}`);
 	},
-    //show single post
+    //show single post via slug
     async postShow (req,res,next) {
         try {
             //find the post in the database and populate all of its reviews (and their authors) using their ids
