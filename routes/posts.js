@@ -1,5 +1,5 @@
 
-if (app.get('env') == 'development'){ require('dotenv').config(); }
+
 const express = require('express');
 const router = express.Router({mergeParams:true});
 const multer = require('multer');
@@ -20,6 +20,8 @@ const {
     postUpdate,
     postDestroy
 } = require('../controllers/posts');
+
+if (router.get('env') == 'development'){ require('dotenv').config(); }
 
 
 /* GET posts index page /posts */

@@ -1,4 +1,6 @@
 
+const express = require('express');
+const app = express();
 if (app.get('env') == 'development'){ require('dotenv').config(); }
 const Post = require('../models/post');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
