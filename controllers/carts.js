@@ -30,5 +30,72 @@ module.exports = {
         }
         res.render('users/cart',{items:cart.items});
     },
-
+    async postCart(req,res,next){
+        try {
+            //figure out the cart (do we need to make one, or get one out of the repo)
+            let cart;
+            if(!req.session.cartId) {
+                try {
+                    //we don't have a cart, we need to create one and store cart id in session
+                    cart = await Cart.create({items:[]});
+                    req.session.cartId = cart.id;
+                } catch (err) {
+                    req.session.error = 'could not create cart';
+                    console.log(err);
+                    return res.redirect('/');
+                }
+                
+            } else {
+                try {
+                    //we have a cart, let's get it from the repo
+                    cart = await Cart.findById(req.session.cartId);
+                } catch(err) {
+                    console.log('could not find cart');
+                    console.log(err);
+                    return res.redirect('/');
+                }
+                
+            }
+    
+            /*either increment quantity for existing product, or 
+            add new product to the items array */
+            const existingItem = cart.items.find(item => item.id === req.body.productId);
+            if(existingItem) {
+                //increment quantity and save cart
+                existingItem.quantity ++;
+            } else {
+                //add new product id to items array
+                cart.items.push({id:req.body.productId, quantity:1});
+            }
+            await cart.updateOne(cart.id, {items: cart.items});
+            res.redirect('/cart');
+        } catch(err) {
+            console.log(err);
+            res.redirect('/')
+        }
+    },
+    async putCart(req,res,next) {
+        try {
+            const { itemId, newQuantity } = req.body;
+            let cart = await Cart.findById(req.session.cartId);
+            await cart.incrementItem(itemId, newQuantity);
+            res.redirect('/cart');
+        } catch(err) {
+            req.session.error = 'Unable to update quantity. Please try again';
+            console.error(err);
+            res.redirect('/cart');
+        }
+    },
+    async deleteItemFromCart(req,res,next) {
+        try {
+            const { itemId } = req.body;
+            const cart = await Cart.findById(req.session.cartId);
+            await cart.removeItem(itemId);
+            console.log('item removed');
+            res.redirect('/cart');
+        } catch(err) {
+            console.log(err);
+            return res.redirect('back');
+        }
+    }
 };
