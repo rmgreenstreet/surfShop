@@ -59,19 +59,26 @@ module.exports = {
 	},
     //show single post
     async postShow (req,res,next) {
-        //find the post in the database and populate all of its reviews (and their authors) using their ids
-        post = await Post.findOne({slug:req.params.slug}).populate({
-            path:'reviews',
-            model:'Review',
-            options:{sort: {'_id':-1}},
-            populate:{
-                path:'author',
-                model:'User'
-            }
-        });
-        //get the post's rating to show on the page
-        const floorRating = post.calculateAverageRating();
-        res.render('posts/show',{post, mapBoxToken, floorRating, title: 'SurfShop - View '+post.title, page:'view_post' });
+        try {
+            //find the post in the database and populate all of its reviews (and their authors) using their ids
+            post = await Post.findOne({slug:req.params.slug}).populate({
+                path:'reviews',
+                model:'Review',
+                options:{sort: {'_id':-1}},
+                populate:{
+                    path:'author',
+                    model:'User'
+                }
+            });
+            //get the post's rating to show on the page
+            const floorRating = post.calculateAverageRating();
+            res.render('posts/show',{post, mapBoxToken, floorRating, title: 'SurfShop - View '+post.title, page:'view_post' });
+        } catch (err) {
+            console.error(err);
+            req.session.error = "There was an issue finding the post. Please try again";
+            res.redirect('back');
+        }
+        
     },
     //edit post
     postEdit (req,res,next) {
