@@ -1,4 +1,5 @@
-require('dotenv');
+
+if (app.get('env') == 'development'){ require('dotenv').config(); }
 const Post = require('../models/post');
 const mapBoxToken = process.env.MAPBOX_TOKEN;
 const { imageDelete } = require('../cloudinary');

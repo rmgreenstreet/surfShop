@@ -1,4 +1,5 @@
-require('dotenv');
+
+if (app.get('env') == 'development'){ require('dotenv').config(); }
 const crypto = require('crypto');
 const cloudinary = require('cloudinary');
 const cloudinaryStorage = require('multer-storage-cloudinary');
