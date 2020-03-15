@@ -69,6 +69,9 @@ module.exports = {
                     path:'author',
                     model:'User'
                 }
+            }).populate({
+                path:'author',
+                model:'User'
             });
             //get the post's rating to show on the page
             const floorRating = post.calculateAverageRating();
