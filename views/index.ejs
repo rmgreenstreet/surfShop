@@ -17,16 +17,17 @@
     <h1 class="mt-4">Most Recent Posts</h1>
     <div id="recent-posts" class="row mt-4">
         <% recentPosts.forEach((post) => { %>
-            <a href="/posts/<%= post.id %>">
-                <div class="col" id="<%= post.id %>">
+            <div class="col post-tile" id="<%= post.id %>">
+                <a href="/posts/<%= post.slug %>">
                     <div class="card">
                         <img src="<%= post.images[0].url %>" alt="<%= post.title %>" class="card-img-top">
                         <div class="card-body">
-                            <div class="card-text"><%- post.properties.description %></div>
+                            <h2 class="card-title"><%= post.title %></h2>
+                            <div class="card-text"><%= post.description %></div>
                         </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
         <% }) %>
     </div>
 </div>
