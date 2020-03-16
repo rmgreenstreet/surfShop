@@ -5,30 +5,23 @@ const Post = require('../models/post');
 module.exports = {
     async getCart(req,res,next) {
         let cart;
+        let cartTotal = 0;
         if(!req.session.cartId) {
             req.session.error = 'There are no items currently in your cart';
             return res.redirect('/');
         }
-    
         try {
-            cart = await Cart.findById(req.session.cartId);
+            cart = await Cart.findById(req.session.cartId).populate({
+                path:'items.post',
+                model:Post
+            }).exec();
+            cartTotal = await cart.getTotal();
         } catch(err) {
             req.session.error = 'cart could not be found';
             console.log(err);
             return res.redirect('/')
         }
-    
-        try {
-            for (let item of cart.items) {
-                const post = await Post.findById(item.id);
-                item.post = post;
-            };
-        } catch (err) {
-            req.session.error = 'error finding items';
-            console.log(err);
-            return res.redirect('/');
-        }
-        res.render('users/cart',{items:cart.items});
+        res.render('users/cart',{items:cart.items, cartTotal, page:'cart'});
     },
     async postCart(req,res,next){
         try {
@@ -38,7 +31,7 @@ module.exports = {
                 try {
                     //we don't have a cart, we need to create one and store cart id in session
                     cart = await Cart.create({items:[]});
-                    req.session.cartId = cart.id;
+                    req.session.cartId = cart._id;
                 } catch (err) {
                     req.session.error = 'could not create cart';
                     console.log(err);
@@ -59,15 +52,15 @@ module.exports = {
     
             /*either increment quantity for existing product, or 
             add new product to the items array */
-            const existingItem = cart.items.find(item => item.id === req.body.productId);
+            const existingItem = cart.items.find(item => item.post === req.body.productId);
             if(existingItem) {
                 //increment quantity and save cart
                 existingItem.quantity ++;
             } else {
                 //add new product id to items array
-                cart.items.push({id:req.body.productId, quantity:1});
+                cart.items.push({post:req.body.productId, quantity:1});
             }
-            await cart.updateOne(cart.id, {items: cart.items});
+            await cart.save();
             res.redirect('/cart');
         } catch(err) {
             console.log(err);

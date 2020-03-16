@@ -33,24 +33,34 @@
                 </div>
             <% } %>
             <div class="card-text">
-                <p>Price: $<%= post.price %></p>
-                <p>Description: <%= post.description %></p>
-                <p>Location: <%= post.location %></p>
-                <p>Posted by: <%= post.author.username %></p>
-                <div class="averageStars mb-2">
-                    <% for(let i = 0;i<5;i++) { %>
-                        <% if(i < floorRating) { %>
-                            <!-- show full star -->
-                            <i class="fas fa-star"></i>
-                        <% } else if( (post.averageRating-i) > 0 && (post.averageRating-i) < 1 ) { %>
-                            <!-- show half star -->
-                            <i class="fas fa-star-half-alt"></i>
-                        <% } else { %>
-                            <!-- show empty star -->
-                            <i class="far fa-star"></i>
-                        <% } %>
-                    <% } %>
-                    <%= (post.reviews.length ? (post.reviews.length + " Review" + (post.reviews.length === 1 ? '' : 's') ): 'No Reviews Yet') %>
+                <div class="row">
+                    <div class="col">
+                        <p>Price: $<%= post.price %></p>
+                        <p>Description: <%= post.description %></p>
+                        <p>Location: <%= post.location %></p>
+                        <p>Posted by: <%= post.author.username %></p>
+                        <div class="averageStars mb-2">
+                            <% for(let i = 0;i<5;i++) { %>
+                                <% if(i < floorRating) { %>
+                                    <!-- show full star -->
+                                    <i class="fas fa-star"></i>
+                                <% } else if( (post.averageRating-i) > 0 && (post.averageRating-i) < 1 ) { %>
+                                    <!-- show half star -->
+                                    <i class="fas fa-star-half-alt"></i>
+                                <% } else { %>
+                                    <!-- show empty star -->
+                                    <i class="far fa-star"></i>
+                                <% } %>
+                            <% } %>
+                            <%= (post.reviews.length ? (post.reviews.length + " Review" + (post.reviews.length === 1 ? '' : 's') ): 'No Reviews Yet') %>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <form action="/cart" method="POST" class="align-middle">
+                            <input type="text" hidden name="productId" value="<%= post.id %>">
+                            <button class="btn btn-outline-secondary">Add To Cart</button>
+                        </form>
+                    </div>
                 </div>
             </div>
             <div CLASS="card">

@@ -1,3 +1,3 @@
 {
-    "ignore": ["/public","package.json","nodemon.json"]
+    "ignore": ["/public/*","package.json","nodemon.json","/tests/*"]
 }

@@ -79,3 +79,14 @@ button {
 #homeHero .btn {
   background-color:rgb(0, 132, 255) !important;
 } */
+
+/* Cart Styles */
+
+.item-thumbnail {
+  width:70px;
+}
+
+#item-list {
+  width:100%;
+  border:2px solid black;
+}
