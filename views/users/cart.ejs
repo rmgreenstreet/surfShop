@@ -33,15 +33,20 @@
                             </div>
                           </div>
                         </th>
-                        <td class="border-0 align-middle"><strong>$<%= item.post.price %></strong></td>
+                        <td class="border-0 align-middle"><strong>$<%= item.post.price.toFixed(2) %></strong></td>
                         <td class="border-0 align-middle"><strong><%= item.quantity %></strong></td>
-                        <td class="border-0 align-middle"><form action="/cart/delete">
-                            <input type="text" name="productId" hidden value="<%= item.post.id %>">
-                            <i class="fa fa-trash"></i>
-                        </form></td>
+                        <td class="border-0 align-middle">
+                            <form action="/cart?_method=DELETE" method="POST">
+                                <input type="text" name="itemId" hidden value="<%= item.post.id %>">
+                                <button><i class="fa fa-trash"></i></button>
+                            </form>
+                        </td>
                       </tr>
                   <% } %>
-                
+                <tr>
+                    <td colspan="3"></td>
+                    <td class="align-right"><a href="/posts" class="btn btn-dark rounded-pill py-2 btn-block">Continue Shopping</a></td>
+                </tr>
               </tbody>
             </table>
           </div>
@@ -78,7 +83,8 @@
               <li class="d-flex justify-content-between py-3 border-bottom"><strong class="text-muted">Total</strong>
                 <h5 class="font-weight-bold">$<%= (cartTotal + 10).toFixed(2) %></h5>
               </li>
-            </ul><a href="/checkout" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</a>
+            </ul>
+            <a href="/checkout" class="btn btn-dark rounded-pill py-2 btn-block">Procceed to checkout</a>
           </div>
         </div>
       </div>
