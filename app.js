@@ -7,7 +7,6 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
-const serveFavicon = require('serve-favicon');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const expressSession = require('express-session');
@@ -17,6 +16,9 @@ const expressSanitizer = require('express-sanitizer');
 const flash = require('connect-flash');
 const helmet = require('helmet');
 const async = require('async');
+const Coupon = require('./models/coupon');
+const sgmail = require('@sendgrid/mail');
+
 
 const app = express();
 if (app.get('env') == 'development'){ require('dotenv').config(); }
@@ -91,6 +93,7 @@ app.use(function (req,res,next) {
 		'_id':'5e1e44d82236de3cecc09df1',
 		'username':'robert'
 	}
+	res.locals.cartId = req.session.cartId;
 	res.locals.currentUser = req.user;
 	//set default page title if one is not specified
 	res.locals.title='Surf Shop';
@@ -140,6 +143,28 @@ app.use(function(err, req, res, next) {
 //   res.status(err.status || 500);
 //   res.render('error');
 });
+
+let initial;
+const couponDelay = async () => {
+	initial = setTimeout(couponInit,(1000*60*60*72));
+}
+const couponInit = async () => {
+	const existingCoupon = await Coupon.findOne().where('expires').gt(Date.now());
+	console.log(existingCoupon);
+	if(!existingCoupon) {
+		console.log('no coupon exists, creating one');
+		const newCoupon = await Coupon.create({});
+		console.log('new coupon created:',newCoupon);
+	} else {
+		console.log('coupon exists, resetting timer');
+		clearTimeout(initial);
+		couponDelay();
+	}
+}
+
+couponInit();
+
+
 
 // const seedPosts = require('./seeds');
 // seedPosts();

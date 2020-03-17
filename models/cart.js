@@ -13,7 +13,7 @@ const cartSchema = new Schema({
     ]
 });
 
-cartSchema.methods.incrementItem = async function(itemId,newQuantity) {
+cartSchema.methods.incrementItem = async (itemId,newQuantity) => {
     let itemToIncrement = this.items.find(item => item.post.equals(itemId));
     if (newQuantity <= 1){
         await this.removeItem(itemId);
@@ -22,12 +22,12 @@ cartSchema.methods.incrementItem = async function(itemId,newQuantity) {
         await this.save();
     }
 };
-cartSchema.methods.removeItem = async function(itemId) {
+cartSchema.methods.removeItem = async (itemId) => {
     const indexToRemove = this.items.indexOf(item => item.post === itemId);
     this.items.splice(indexToRemove,1);
     this.save();
 };
-cartSchema.methods.getTotal = async function() {
+cartSchema.methods.getTotal = async () => {
     return this.items.reduce((total,current) => {
         return total + (current.post.price * current.quantity);
     },0);

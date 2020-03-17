@@ -44,7 +44,7 @@
 		  </button>
 		  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
 			<div class="navbar-nav ml-auto">
-			  <a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'all_posts' ? 'active' : '' %>" href="/posts">Posts<span class="sr-only">(current)</span></a>
+				<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'all_posts' ? 'active' : '' %>" href="/posts">Posts<span class="sr-only">(current)</span></a>
 				<% if(!currentUser){ %>
 					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login" id="login_button">Log In</a>
 					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register" id="signup_button">Sign Up</a>
@@ -53,12 +53,15 @@
 					<a class="nav-item nav-link" href="/logout" id="logout">Log Out</a>
 					<a class="nav-item nav-link <%= typeof page !== 'undefined' && page === 'new_post' ? 'active' : '' %>" href="/posts/new" id="new_post">New Post</a>
 				<% }; %>
-			<form name="searchCampgrounds" action="/campgrounds" method="get" class="form-inline">
-				<div class="input-group">
-					<input class="form-control mr-sm-2" type="search" placeholder="Search Campgrounds" aria-label="Search" name="searchTerm">
-					<button class="btn btn-outline-light my-2 my-sm-0 input-group-append" type="submit">Search</button>
-				</div>
-			</form>
+				<% if(cartId) { %> 
+					<a class="nav-item nav-link mr-3<%= typeof page !== 'undefined' && page === 'cart' ? 'active' : '' %>" href="/cart" id="go_to_cart">Cart</a>
+				<% } %>
+				<form name="searchCampgrounds" action="/campgrounds" method="get" class="form-inline">
+					<div class="input-group">
+						<input class="form-control mr-sm-2" type="search" placeholder="Search Campgrounds" aria-label="Search" name="searchTerm">
+						<button class="btn btn-outline-light my-2 my-sm-0 input-group-append" type="submit">Search</button>
+					</div>
+				</form>
 			</div>
 		  </div>
 		</nav>
